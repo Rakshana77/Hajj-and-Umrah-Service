@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import logo from '../assets/logo/logo.jpeg';
+import logo from '../assets/logo/Gemini_Generated_Image_6kua1k6kua1k6kua.png';
 
 interface NavbarProps {
   onNavigate: (page: string) => void;
@@ -9,12 +9,16 @@ interface NavbarProps {
 const Navbar: FC<NavbarProps> = ({ onNavigate, currentPage }) => {
   return (
     <nav className="sticky top-0 w-full z-50 border-b-4 border-[#F4C430] bg-white/95 backdrop-blur-sm shadow-[0_20px_40px_rgba(11,11,11,0.04)]">
-      <div className="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+      <div className="flex justify-between items-center max-w-7xl mx-auto px-8 h-36">
         <div 
-          className="flex items-center gap-3 cursor-pointer" 
+          className="flex items-center gap-4 cursor-pointer group" 
           onClick={() => onNavigate('home')}
         >
-          <img src={logo} alt="HAJI UMRAH & ZIYARA SERVICE" className="h-14 w-auto object-contain" />
+          <img src={logo} alt="HAJI UMRAH & ZIYARA SERVICE" className="h-28 w-28 object-cover rounded-full shadow-md border-2 border-[#F4C430] transition-transform group-hover:scale-105" />
+          <div className="flex flex-col">
+            <span className="text-xl font-black text-neutral-900 tracking-tight leading-none font-h1">HAJI UMRAH</span>
+            <span className="text-sm font-bold text-[#F4C430] tracking-widest uppercase">&amp; ZIYARA SERVICE</span>
+          </div>
         </div>
         <div className="hidden md:flex items-center space-x-8">
           <a 
