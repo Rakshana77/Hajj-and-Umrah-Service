@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import logo from '../assets/logo/logo.jpeg';
 
 interface NavbarProps {

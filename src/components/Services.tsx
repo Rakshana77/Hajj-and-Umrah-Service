@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 
 interface ServicesProps {
   onNavigate: (page: string) => void;
