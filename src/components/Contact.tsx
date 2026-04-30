@@ -1,10 +1,6 @@
-import React from 'react';
+import { FC } from 'react';
 
-interface ContactProps {
-  onNavigate: (page: string) => void;
-}
-
-const Contact: React.FC<ContactProps> = ({ onNavigate }) => {
+const Contact: FC = () => {
   return (
     <main className="max-w-7xl mx-auto px-8 py-xl">
       {/* Hero Section */}

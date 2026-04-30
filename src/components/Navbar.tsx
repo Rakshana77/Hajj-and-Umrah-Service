@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import logo from '../assets/logo/logo.jpeg';
 
 interface NavbarProps {
@@ -6,7 +6,7 @@ interface NavbarProps {
   currentPage: string;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
+const Navbar: FC<NavbarProps> = ({ onNavigate, currentPage }) => {
   return (
     <nav className="sticky top-0 w-full z-50 border-b-4 border-[#F4C430] bg-white/95 backdrop-blur-sm shadow-[0_20px_40px_rgba(11,11,11,0.04)]">
       <div className="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">

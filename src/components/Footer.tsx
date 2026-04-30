@@ -1,7 +1,7 @@
-import React from 'react';
+import { FC } from 'react';
 import logo from '../assets/logo/logo.jpeg';
 
-const Footer: React.FC = () => {
+const Footer: FC = () => {
   return (
     <footer className="w-full border-t border-neutral-200 bg-neutral-50">
       <div className="max-w-7xl mx-auto px-8 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">

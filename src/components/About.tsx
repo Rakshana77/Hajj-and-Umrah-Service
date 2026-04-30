@@ -1,10 +1,10 @@
-import React from 'react';
+import { FC } from 'react';
 
 interface AboutProps {
   onNavigate: (page: string) => void;
 }
 
-const About: React.FC<AboutProps> = ({ onNavigate }) => {
+const About: FC<AboutProps> = ({ onNavigate }) => {
   return (
     <main>
       {/* Hero Section */}

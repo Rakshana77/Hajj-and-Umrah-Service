@@ -1,10 +1,10 @@
-import React from 'react';
+import { FC } from 'react';
 
 interface ServicesProps {
   onNavigate: (page: string) => void;
 }
 
-const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
+const Services: FC<ServicesProps> = ({ onNavigate }) => {
   return (
     <main className="max-w-7xl mx-auto px-8 py-xl">
       {/* Hero Section */}

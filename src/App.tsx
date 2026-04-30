@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import About from './components/About';
@@ -21,7 +21,7 @@ function App() {
       {currentPage === 'home' && <Home onNavigate={handleNavigate} />}
       {currentPage === 'about' && <About onNavigate={handleNavigate} />}
       {currentPage === 'services' && <Services onNavigate={handleNavigate} />}
-      {currentPage === 'contact' && <Contact onNavigate={handleNavigate} />}
+      {currentPage === 'contact' && <Contact />}
 
       <Footer />
 
