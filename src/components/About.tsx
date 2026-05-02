@@ -1,6 +1,7 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const About: FC = () => {
+const About: React.FC = () => {
   const navigate = useNavigate();
   return (
     <main className="pt-32 sm:pt-40">

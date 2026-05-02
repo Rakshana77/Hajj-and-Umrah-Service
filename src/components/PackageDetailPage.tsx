@@ -7,8 +7,6 @@ import {
   Info, AlertCircle, Share2, Heart
 } from 'lucide-react';
 import { packages } from '../data/packages';
-import type { Package } from '../data/packages';
-import PackageSection from './PackageSection';
 
 const PackageDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

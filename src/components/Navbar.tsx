@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronRight, Phone, MapPin } from 'lucide-react';
+import { X, ChevronRight, Phone, MapPin } from 'lucide-react';
 import logo from '../assets/logo/Gemini_Generated_Image_6kua1k6kua1k6kua.png';
 
 const Navbar: React.FC = () => {

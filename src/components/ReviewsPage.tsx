@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, MessageCircle, Camera, Filter, ChevronDown, CheckCircle2, User, Calendar, Quote } from 'lucide-react';
+import { Star, MessageCircle, Camera, CheckCircle2, Calendar, Quote } from 'lucide-react';
 
 import man1 from '../assets/reviews/man1.png';
 import woman1 from '../assets/reviews/woman1.png';

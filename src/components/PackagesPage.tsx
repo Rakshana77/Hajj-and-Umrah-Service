@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, SlidersHorizontal, Search, Star, MapPin, Clock, ArrowUpDown, X, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { Filter, SlidersHorizontal, Search, Star, Clock, ArrowUpDown, X, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { packages } from '../data/packages';
-import type { Package } from '../data/packages';
 
 const PackagesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
