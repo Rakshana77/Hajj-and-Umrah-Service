@@ -73,13 +73,13 @@ export default {
         "base": "8px"
       },
       fontFamily: {
-        "h3": ["Epilogue"],
-        "h1": ["Epilogue"],
-        "h2": ["Epilogue"],
-        "body-lg": ["Plus Jakarta Sans"],
-        "label-bold": ["Plus Jakarta Sans"],
-        "display": ["Epilogue"],
-        "body-md": ["Plus Jakarta Sans"]
+        "h3": ["Outfit"],
+        "h1": ["Outfit"],
+        "h2": ["Outfit"],
+        "body-lg": ["Inter"],
+        "label-bold": ["Inter"],
+        "display": ["Outfit"],
+        "body-md": ["Inter"]
       },
       fontSize: {
         "h3": ["20px", {"lineHeight": "1.4", "fontWeight": "700"}],

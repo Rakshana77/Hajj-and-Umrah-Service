@@ -1,11 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #F4C430;        /* Brand Gold */
+  --primary-dark: #D4A017;   /* Deep Gold */
+  --secondary: #111111;      /* Deep Black */
+  --accent: #064E3B;         /* Islamic Green Accent */
+  --neutral-50: #FCFBF7;     /* Soft Paper White */
+  --neutral-100: #F3F4F6;
+  --neutral-200: #E5E7EB;
+  --neutral-600: #4B5563;
+  --neutral-900: #111827;
+}
+
 @layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+  }
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: 'Outfit', sans-serif;
+    color: var(--neutral-900);
+  }
   body {
-    background-color: #fcf8f8;
+    background-color: var(--neutral-50);
+    color: var(--neutral-600);
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l2.5 7.5L40 10l-7.5 2.5L30 20l-2.5-7.5L20 10l7.5-2.5L30 0zm0 40l2.5 7.5L40 50l-7.5 2.5L30 60l-2.5-7.5L20 50l7.5-2.5L30 40z' fill='%23F4C430' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+    transition: background-color 0.3s ease;
   }
 }
 
@@ -24,5 +48,13 @@
   .islamic-pattern {
     background-color: transparent;
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l2.5 12.5L45 15l-12.5 2.5L30 30l-2.5-12.5L15 15l12.5-2.5z' fill='%23F4C430' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+  }
+
+  /* Swiper Custom Styling */
+  .swiper-pagination-bullet-active {
+    background: #F4C430 !important;
+  }
+  .swiper-button-next, .swiper-button-prev {
+    color: #F4C430 !important;
   }
 }

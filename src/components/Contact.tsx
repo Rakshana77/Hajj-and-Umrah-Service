@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 const Contact: FC = () => {
   return (
-    <main className="max-w-7xl mx-auto px-8 py-xl">
+    <main className="max-w-7xl mx-auto px-4 sm:px-8 pt-32 sm:pt-40 pb-20">
       {/* Hero Section */}
       <section className="mb-xl text-center">
         <h1 className="font-display text-display mb-md text-neutral-900">Reach Out to Your Trusted Hajj Partners</h1>
@@ -57,7 +57,7 @@ const Contact: FC = () => {
 
           {/* Map Placeholder */}
           <div className="h-64 rounded-xl overflow-hidden shadow-[0_20px_40px_rgba(11,11,11,0.04)] relative">
-            <img className="w-full h-full object-cover" alt="Minimalist monochromatic city map of Chennai showing primary arterial roads and urban layout in a clean aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjVQ6LmeXVNZw_P5_oNnMFc5nzGiDHEkLpjq_JraM8t_KWJPv23gCVZjRO9Ds5gyGiC9yyzEemsYOB6AcC5fg7BVbFleWBw9q0Ftw9ih-GkFwR3NgijwsR0Tgb7_7cs1si7Qv-gdmseCG3XdZE_jGfHmu6qbhkWCaxJQywY_oQ3YWGVhY3702PfH1x5lb5OJWQpluyWy8fOV2HLuix65wSfPjQWTPFMhp_5rPJSiHEZYpoxoQYXKflP2yPuQCXGkQtTmMUMUoFcSI"/>
+            <img className="w-full h-full object-cover" alt="Minimalist monochromatic city map of Chennai showing primary arterial roads and urban layout in a clean aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjVQ6LmeXVNZw_P5_oNnMFc5nzGiDHEkLpjq_JraM8t_KWJPv23gCVZjRO9Ds5gyGiC9yyzEemsYOB6AcC5fg7BVbFleWBw9q0Ftw9ih-GkFwR3NgijwsR0Tgb7_7cs1si7Qv-gdmseCG3XdZE_jGfHmu6qbhkWCaxJQywY_oQ3YWGVhY3702PfH1x5lb5OJWQpluyWy8fOV2HLuix65wSfPjQWTPFMhp_5rPJSiHEZYpoxoQYXKflP2yPuQCXGkQtTmMUMUoFcSI" loading="lazy" />
             <div className="absolute inset-0 bg-neutral-900/10 flex items-center justify-center">
               <a 
                 href="https://www.google.com/maps/search/Arsh+Hajj+and+Umrah+Chennai" 

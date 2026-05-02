@@ -1,239 +1,175 @@
 import type { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ShieldCheck, Compass, Utensils, Headset, ChevronRight, Phone, Mail } from 'lucide-react';
+import PackageSection from './PackageSection';
+import GalleryCarousel from './GalleryCarousel';
+import HeroCarousel from './HeroCarousel';
 
-interface HomeProps {
-  onNavigate: (page: string) => void;
-}
+const Home: FC = () => {
+  const navigate = useNavigate();
 
-const Home: FC<HomeProps> = ({ onNavigate }) => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6 }
+    }
+  };
+
   return (
-    <main>
+    <main className="overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative h-[716px] flex items-center overflow-hidden bg-neutral-900">
-        <img className="absolute inset-0 w-full h-full object-cover opacity-60" alt="Wide cinematic shot of the Holy Kaaba in Makkah during dawn with soft spiritual golden light and minimal crowds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCf6Qc_zCiI6TJ375gCkSZh4sGYrPPiDe6VYf94i5Edqpr9NC7oJdX1-xaa196kWznKrUp-9sYGF5w7Uhdzw_jLE_GERpzaIIp1j6n3lhEC0MCd98_9HyqZDvzFjSrZy_9meFLbiRID7JJurkYW-crAZeN52Vmljy61r1M558CBpkiXOqVATrcIQ90BvswNS8BTTARS54tOjnwMSRF7wNDmDLMtsln7IvsGGv3AZhjbUeU71xUzVXDjCG-yWwwfl023TvIQdww5OIY"/>
-        <div className="relative max-w-7xl mx-auto px-8 w-full">
-          <div className="max-w-2xl">
-            <span className="inline-block bg-[#F4C430] text-neutral-900 px-3 py-1 font-label-bold text-label-bold mb-6 uppercase tracking-wider">Licensed Hajj &amp; Umrah Operator</span>
-            <h1 className="font-display text-display text-white mb-6">Experience a Spiritual Umrah Journey with Ease</h1>
-            <p className="font-body-lg text-body-lg text-neutral-200 mb-8">Guided by faith, delivered with excellence. Join Haji Umrah & Ziyara service for a meticulously planned spiritual retreat.</p>
-            <div className="flex gap-4">
-              <button 
-                className="bg-[#F4C430] text-neutral-900 px-8 py-4 font-bold text-label-bold font-label-bold hover:opacity-90 transition-all shadow-xl"
-                onClick={() => onNavigate('contact')}
-              >
-                Book Now
-              </button>
-              <button 
-                className="border-2 border-white text-white px-8 py-4 font-bold text-label-bold font-label-bold hover:bg-white hover:text-neutral-900 transition-all"
-                onClick={() => onNavigate('services')}
-              >
-                Our Services
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroCarousel />
+
       {/* Trust Indicators */}
-      <section className="bg-white py-12 border-b border-neutral-100">
-        <div className="max-w-7xl mx-auto px-8 flex flex-wrap justify-center gap-12 md:justify-between items-center">
-          <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-[#F4C430] text-3xl">verified_user</span>
-            <span className="font-label-bold text-neutral-900">Licensed Operator</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-[#F4C430] text-3xl">mosque</span>
-            <span className="font-label-bold text-neutral-900">Expert Religious Guidance</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-[#F4C430] text-3xl">restaurant</span>
-            <span className="font-label-bold text-neutral-900">Premium Halal Catering</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-[#F4C430] text-3xl">support_agent</span>
-            <span className="font-label-bold text-neutral-900">24/7 Group Support</span>
-          </div>
-        </div>
-      </section>
-      {/* Package Categories / Grid */}
-      <section className="py-xl max-w-7xl mx-auto px-8">
-        <div className="text-center mb-16">
-          <h2 className="font-h1 text-h1 text-neutral-900 mb-4 uppercase tracking-widest">Select Your Spiritual Journey</h2>
-          <div className="h-1 w-20 bg-[#F4C430] mx-auto"></div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Regular Umrah */}
-          <div className="bg-white border-t-4 border-[#F4C430] soft-veil p-8 flex flex-col">
-            <div className="mb-6">
-              <img className="w-full h-48 object-cover mb-6 rounded-lg" alt="Interior of a modern luxury hotel lobby in Makkah with elegant marble flooring and warm ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAofHlpqv5M6ysy-oUa04tSSxJxvleTrmCf07NHab_GmOgjh800R44f9ApEI-lbo6gnzfzi2EClaKUURZpbIrdvhK2V74MYtC5TioBvonrq-nIivwVwqh59jUYBWKVdk299A18g4yXE-_VUmC68pnaxRwJ4hgqd_Dw4mN-roN7L6J6Ks9A1MH7ZMJxS3m_8kZAvU24KzS4dfWJ6alGPV50eeZX83TwXgELZg3qFetj6edDK9zJuU-1I0hyQNG6A0gzZR5A814R8oOI"/>
-              <h3 className="font-h2 text-h2 text-neutral-900 mb-2">Regular Umrah</h3>
-              <p className="font-body-md text-neutral-600 mb-4">Standard comfort for a peaceful pilgrimage experience.</p>
-              <div className="text-3xl font-black text-neutral-900">₹95,000<span className="text-sm font-normal text-neutral-500"> / person</span></div>
-            </div>
-            <ul className="space-y-4 mb-8 flex-grow">
-              <li className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                Visa &amp; Insurance Included
-              </li>
-              <li className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>hotel</span>
-                Standard Hotel (600m from Haram)
-              </li>
-              <li className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>flatware</span>
-                Full Board Indian Food
-              </li>
-              <li className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>directions_bus</span>
-                AC Transport &amp; Ziyarat
-              </li>
-            </ul>
-            <button 
-              className="w-full bg-[#F4C430] text-neutral-900 py-4 font-bold text-label-bold font-label-bold hover:opacity-90 transition-all rounded-lg"
-              onClick={() => onNavigate('contact')}
+      <section className="bg-white py-10 sm:py-16 border-b border-neutral-100 relative z-20">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8"
+        >
+          {[
+            { icon: <ShieldCheck />, label: "Licensed Operator" },
+            { icon: <Compass />, label: "Religious Guidance" },
+            { icon: <Utensils />, label: "Halal Catering" },
+            { icon: <Headset />, label: "24/7 Group Support" }
+          ].map((item, i) => (
+            <motion.div 
+              key={i}
+              variants={itemVariants}
+              className="flex flex-col md:flex-row items-center gap-3 sm:gap-4 text-center md:text-left group"
             >
-              Book This Package
-            </button>
-          </div>
-          {/* Ramadan Special */}
-          <div className="bg-white border-t-4 border-[#F4C430] soft-veil p-8 flex flex-col transform md:-translate-y-4 scale-105 z-10 shadow-2xl rounded-xl">
-            <div className="mb-6">
-              <div className="flex justify-between items-start mb-4">
-                <span className="bg-neutral-900 text-white px-3 py-1 text-xs font-bold uppercase tracking-wider">Most Popular</span>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#F4C430]/10 flex items-center justify-center text-[#F4C430] group-hover:scale-110 transition-transform">
+                {item.icon}
               </div>
-              <img className="w-full h-48 object-cover mb-6 rounded-lg" alt="Beautiful twilight view of the Clock Tower and the Grand Mosque area with illuminated lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEw4gl2Oc7NH1wSl-cpeWOpt7BFun8a44Nyh26hB7QsjlSTUEJFG5EzIeHzi42InBu0zMJ_rlAC5jk2PZkeXM0uKiOr5-TbSBP1tYDZmQqIpzq0TxZWiID6UTliYXVaTGORQzMoFmDZrXoj2pm3k3x01D0O55Cg7tdqWIdTaooTzT5PgB3z8h3CRsexc0o7xw2-RmvCfmLzwvHeOSc4rUpud_Wr-UKaERbyGOrc7dxzUE-lSnIg6Zx7iVScYMpW5MP6KAEmsewSKc"/>
-              <h3 className="font-h2 text-h2 text-neutral-900 mb-2">Ramadan Special</h3>
-              <p className="font-body-md text-neutral-600 mb-4">Experience the blessings of the holy month in Makkah.</p>
-              <div className="text-3xl font-black text-neutral-900">₹110,000<span className="text-sm font-normal text-neutral-500"> / person</span></div>
-            </div>
-            <ul className="space-y-4 mb-8 flex-grow">
-              <li className="flex items-center gap-2 text-sm font-bold text-neutral-900">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                Limited Ramadan Visa Slots
-              </li>
-              <li className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>hotel</span>
-                Premium Stay Near Haram
-              </li>
-              <li className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>restaurant</span>
-                Suhoor &amp; Iftar Arrangements
-              </li>
-              <li className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>group</span>
-                Guided Taraweeh Groups
-              </li>
-            </ul>
-            <button 
-              className="w-full bg-[#F4C430] text-neutral-900 py-4 font-bold text-label-bold font-label-bold hover:opacity-90 transition-all shadow-lg rounded-lg"
-              onClick={() => onNavigate('contact')}
-            >
-              Enquire Now
-            </button>
-          </div>
-          {/* Deluxe Umrah */}
-          <div className="bg-white border-t-4 border-[#F4C430] soft-veil p-8 flex flex-col">
-            <div className="mb-6">
-              <img className="w-full h-48 object-cover mb-6 rounded-lg" alt="Luxury hotel suite bedroom with premium linens and a view of the Holy Mosque from the window" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhkOddjpzhvK6iwJhQvWYsNxbm2zQFcZzrsXVCXtHkrl45fb59dHT2g2dLjAAayKv0_-w6XOunES0CayqV-rqVlmo24TjSykRQl7bnmdvE9CLWKpiOKsCpIN1YFSZjkK3vjsWyb5QVCjP14ZYhz8JiybptJ5oOfNDcoJHX_Qu2VlYC-pVnaoTsA6FGXU_WaBCs-bUfR_235jFs9v2aphfZDgzNW85kZhjlrMubTrtizG4jqiA8X6i_SeQNOF3T8ngZVNU34P4VGB4"/>
-              <h3 className="font-h2 text-h2 text-neutral-900 mb-2">Deluxe Umrah</h3>
-              <p className="font-body-md text-neutral-600 mb-4">Ultimate luxury with stay at Hilton or similar 5-star hotels.</p>
-              <div className="text-3xl font-black text-neutral-900">₹145,000<span className="text-sm font-normal text-neutral-500"> / person</span></div>
-            </div>
-            <ul className="space-y-4 mb-8 flex-grow">
-              <li className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>hotel</span>
-                Stay at Hilton Suites / Movenpick
-              </li>
-              <li className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>flight_takeoff</span>
-                Direct Flight Options
-              </li>
-              <li className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>directions_car</span>
-                Private GMC Transfers
-              </li>
-              <li className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-outlined text-[#F4C430] text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>room_service</span>
-                24/7 Personalized Concierge
-              </li>
-            </ul>
-            <button 
-              className="w-full bg-[#F4C430] text-neutral-900 py-4 font-bold text-label-bold font-label-bold hover:opacity-90 transition-all rounded-lg"
-              onClick={() => onNavigate('contact')}
-            >
-              Book Deluxe
-            </button>
-          </div>
-        </div>
+              <span className="font-bold text-[10px] sm:text-sm text-neutral-900 uppercase tracking-widest">{item.label}</span>
+            </motion.div>
+          ))}
+        </motion.div>
       </section>
+
+      {/* Package Section */}
+      <PackageSection />
+
       {/* Bento Grid: Inclusion Details */}
-      <section className="bg-neutral-50 py-xl">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="mb-12">
-            <h2 className="font-h2 text-h2 text-neutral-900">Our Comprehensive Services</h2>
-            <p className="font-body-md text-neutral-600">Every detail of your journey is handled by our expert team.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Visa */}
-            <div className="md:col-span-2 bg-white p-8 soft-veil border-t-4 border-[#F4C430] rounded-xl">
-              <span className="material-symbols-outlined text-[#F4C430] text-4xl mb-4">assignment</span>
-              <h4 className="font-h3 text-h3 mb-2">Visa &amp; Insurance</h4>
-              <p className="font-body-md text-neutral-600">Complete visa processing including mandatory medical insurance for a worry-free entry to the Kingdom.</p>
-            </div>
-            {/* Food */}
-            <div className="bg-white p-8 soft-veil border-t-4 border-[#F4C430] rounded-xl">
-              <span className="material-symbols-outlined text-[#F4C430] text-4xl mb-4">restaurant_menu</span>
-              <h4 className="font-h3 text-h3 mb-2">Indian Cuisine</h4>
-              <p className="font-body-md text-neutral-600">Nutritious and delicious Indian meals prepared daily.</p>
-            </div>
-            {/* Hotels */}
-            <div className="bg-white p-8 soft-veil border-t-4 border-[#F4C430] rounded-xl">
-              <span className="material-symbols-outlined text-[#F4C430] text-4xl mb-4">apartment</span>
-              <h4 className="font-h3 text-h3 mb-2">Hilton Stay</h4>
-              <p className="font-body-md text-neutral-600">Premium accommodation partners like Hilton and Fairmont.</p>
-            </div>
-            {/* Transport */}
-            <div className="bg-white p-8 soft-veil border-t-4 border-[#F4C430] rounded-xl">
-              <span className="material-symbols-outlined text-[#F4C430] text-4xl mb-4">airport_shuttle</span>
-              <h4 className="font-h3 text-h3 mb-2">AC Transport</h4>
-              <p className="font-body-md text-neutral-600">New model air-conditioned buses for all internal travels.</p>
-            </div>
-            {/* Ziyarat */}
-            <div className="md:col-span-2 bg-white p-8 soft-veil border-t-4 border-[#F4C430] rounded-xl">
-              <span className="material-symbols-outlined text-[#F4C430] text-4xl mb-4">map</span>
-              <h4 className="font-h3 text-h3 mb-2">Guided Ziyarat</h4>
-              <p className="font-body-md text-neutral-600">Visit historical sites in Makkah and Madinah with expert guides who explain the religious significance of each location.</p>
-            </div>
-            {/* Support */}
-            <div className="bg-white p-8 soft-veil border-t-4 border-[#F4C430] rounded-xl">
-              <span className="material-symbols-outlined text-[#F4C430] text-4xl mb-4">live_help</span>
-              <h4 className="font-h3 text-h3 mb-2">24/7 Support</h4>
-              <p className="font-body-md text-neutral-600">On-ground team to assist with all your needs.</p>
-            </div>
-          </div>
+      <section className="bg-neutral-50 py-16 sm:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="mb-12 sm:mb-20 text-center sm:text-left"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900 mb-4 sm:mb-6">Our Comprehensive <span className="text-[#F4C430]">Services</span></h2>
+            <p className="text-neutral-500 text-base sm:text-lg max-w-2xl leading-relaxed px-4 sm:px-0">Every detail of your journey is handled by our expert team with devotion and care.</p>
+          </motion.div>
+
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8"
+          >
+            {/* Cards using itemVariants */}
+            <motion.div variants={itemVariants} className="md:col-span-2 bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-2xl transition-all group">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#F4C430]/10 rounded-2xl flex items-center justify-center text-[#F4C430] mb-6 sm:mb-8 group-hover:rotate-12 transition-transform">
+                <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8" />
+              </div>
+              <h4 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-4">Visa & Insurance</h4>
+              <p className="text-neutral-500 text-sm sm:text-base leading-relaxed">Complete visa processing including mandatory medical insurance for a worry-free entry to the Kingdom.</p>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-2xl transition-all group">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#F4C430]/10 rounded-2xl flex items-center justify-center text-[#F4C430] mb-6 sm:mb-8 group-hover:rotate-12 transition-transform">
+                <Utensils className="w-6 h-6 sm:w-8 sm:h-8" />
+              </div>
+              <h4 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-4">Indian Cuisine</h4>
+              <p className="text-neutral-500 leading-relaxed text-sm">Nutritious and delicious Indian meals prepared daily by our chefs.</p>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-2xl transition-all group">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#F4C430]/10 rounded-2xl flex items-center justify-center text-[#F4C430] mb-6 sm:mb-8 group-hover:rotate-12 transition-transform">
+                <Compass className="w-6 h-6 sm:w-8 sm:h-8" />
+              </div>
+              <h4 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-4">Guided Ziyarat</h4>
+              <p className="text-neutral-500 leading-relaxed text-sm">Visit historical sites with expert guides explaining religious significance.</p>
+            </motion.div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12 flex justify-center"
+          >
+            <button 
+              onClick={() => navigate('/services')}
+              className="group flex items-center gap-3 text-neutral-900 font-black text-[10px] sm:text-xs uppercase tracking-widest hover:text-[#F4C430] transition-colors"
+            >
+              Explore All Services 
+              <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
+            </button>
+          </motion.div>
         </div>
       </section>
+
+      {/* Gallery Moments */}
+      <GalleryCarousel />
+
       {/* Call to Action */}
-      <section className="py-xl bg-white">
-        <div className="max-w-5xl mx-auto px-8 text-center">
-          <div className="p-12 border-4 border-[#F4C430] soft-veil rounded-2xl bg-neutral-50/50">
-            <h2 className="font-h1 text-h1 text-neutral-900 mb-6 uppercase tracking-widest">Ready to Embark on Your Journey?</h2>
-            <p className="font-body-lg text-body-lg text-neutral-600 mb-10">Our consultants are available to help you choose the best package for your spiritual needs and budget.</p>
-            <div className="flex flex-col md:flex-row justify-center gap-6">
-              <a 
-                className="bg-[#F4C430] text-neutral-900 px-10 py-4 font-bold text-label-bold font-label-bold flex items-center justify-center gap-2 rounded-lg hover:scale-105 transition-transform shadow-lg" 
+      <section className="py-16 sm:py-32 bg-white relative">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 text-center">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="p-8 sm:p-16 rounded-[2rem] sm:rounded-[3rem] bg-neutral-900 text-white relative overflow-hidden shadow-3xl"
+          >
+            <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]" />
+            
+            <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 relative z-10 leading-tight">
+              Ready to Embark on <br className="hidden sm:block"/>Your <span className="text-[#F4C430]">Sacred Journey?</span>
+            </h2>
+            <p className="text-neutral-400 text-sm sm:text-base mb-8 sm:mb-10 max-w-2xl mx-auto relative z-10">
+              Our consultants are available to help you choose the best package for your spiritual needs and budget.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 relative z-10">
+              <motion.a 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-[#F4C430] text-neutral-900 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl" 
                 href="tel:08048102586"
               >
-                <span className="material-symbols-outlined">call</span>
-                Call 08048102586
-              </a>
-              <button 
-                className="border-2 border-neutral-900 text-neutral-900 px-10 py-4 font-bold text-label-bold font-label-bold flex items-center justify-center gap-2 rounded-lg hover:bg-neutral-900 hover:text-white transition-all shadow-sm"
-                onClick={() => onNavigate('contact')}
+                <Phone className="w-3.5 h-3.5" />
+                Call Now
+              </motion.a>
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-white hover:text-neutral-900 transition-all"
+                onClick={() => navigate('/contact')}
               >
-                <span className="material-symbols-outlined">mail</span>
-                Request a Callback
-              </button>
+                <Mail className="w-3.5 h-3.5" />
+                Request Callback
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </main>

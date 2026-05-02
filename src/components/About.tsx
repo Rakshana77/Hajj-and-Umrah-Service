@@ -1,14 +1,11 @@
-import type { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-interface AboutProps {
-  onNavigate: (page: string) => void;
-}
-
-const About: FC<AboutProps> = ({ onNavigate }) => {
+const About: FC = () => {
+  const navigate = useNavigate();
   return (
-    <main>
+    <main className="pt-32 sm:pt-40">
       {/* Hero Section */}
-      <section className="relative py-xl bg-surface">
+      <section className="relative py-12 sm:py-24 bg-surface">
         <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-lg items-center">
           <div className="space-y-md">
             <span className="inline-block py-xs px-sm bg-secondary-container text-on-secondary-container font-label-bold rounded-full text-xs tracking-widest uppercase">Established Journeys</span>
@@ -18,7 +15,7 @@ const About: FC<AboutProps> = ({ onNavigate }) => {
             </p>
           </div>
           <div className="relative h-[500px] rounded-xl overflow-hidden soft-veil-shadow border-t-4 border-[#F4C430]">
-            <img alt="Masjid al-Haram at sunset" className="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg-nwcwMSP0Ww3l8sVr0vk0sJ_i1cCYMLm9a9x7jwYi7Vg1cZ5PJeG8w-8bY6NUOnbPq26BeHqyopxDgD3VQskiUfgwwPOjPwXZKQ8bp0cJqiJMEnsWxXx9-dHvsakebbL9_zEbbg2gXvL1pOlH3ozUjOTRFnCIO9K276sdg8XPj98rD1nesBIor93j38xdTwHsReQ10IkGO-N3rktfmuCP0OWzYPm-3YxxyBlPaX4JAHO_aZuRuRslWmTYJ5Cth9wkSXlBKjJ-dg"/>
+            <img alt="Masjid al-Haram at sunset" className="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg-nwcwMSP0Ww3l8sVr0vk0sJ_i1cCYMLm9a9x7jwYi7Vg1cZ5PJeG8w-8bY6NUOnbPq26BeHqyopxDgD3VQskiUfgwwPOjPwXZKQ8bp0cJqiJMEnsWxXx9-dHvsakebbL9_zEbbg2gXvL1pOlH3ozUjOTRFnCIO9K276sdg8XPj98rD1nesBIor93j38xdTwHsReQ10IkGO-N3rktfmuCP0OWzYPm-3YxxyBlPaX4JAHO_aZuRuRslWmTYJ5Cth9wkSXlBKjJ-dg" loading="lazy" />
           </div>
         </div>
       </section>
@@ -90,7 +87,7 @@ const About: FC<AboutProps> = ({ onNavigate }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
             {/* Feature 1 */}
             <div className="md:col-span-2 relative h-80 rounded-xl overflow-hidden group">
-              <img alt="Professional Indian Chef" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_pu_4HKH8cHs7pSkK0__mAy-PcD6OVg8EJB23D9AxskOxPsBYzGaWVxCjrUz5Q5E6DyjJXORiYMd1NghIgJrk62MUZW3ttMRDxamb9WYfVNweclQ58YZllEBsYiXF7mz636S7Tll-nbojan1FBJQ8zsgWjtwInbR4rUMxbhA0CRoUZ4k-Np12wJIoBvPcI2LIbvtqeR-0eQB2Gczb7RZf_5DYQLuviYy2N2TOVkBDDmSJS0--3qkjsdzzM-nbdq9JixwYN-z_Hmc"/>
+              <img alt="Professional Indian Chef" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_pu_4HKH8cHs7pSkK0__mAy-PcD6OVg8EJB23D9AxskOxPsBYzGaWVxCjrUz5Q5E6DyjJXORiYMd1NghIgJrk62MUZW3ttMRDxamb9WYfVNweclQ58YZllEBsYiXF7mz636S7Tll-nbojan1FBJQ8zsgWjtwInbR4rUMxbhA0CRoUZ4k-Np12wJIoBvPcI2LIbvtqeR-0eQB2Gczb7RZf_5DYQLuviYy2N2TOVkBDDmSJS0--3qkjsdzzM-nbdq9JixwYN-z_Hmc" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-lg">
                 <h3 className="font-h2 text-h2 text-white mb-xs">Indian Food Experts</h3>
                 <p className="text-neutral-300 font-body-md">Authentic home-style meals prepared by certified chefs to keep you nourished and focused on your prayers.</p>
@@ -110,7 +107,7 @@ const About: FC<AboutProps> = ({ onNavigate }) => {
             </div>
             {/* Feature 4 */}
             <div className="md:col-span-2 relative h-80 rounded-xl overflow-hidden group">
-              <img alt="Team Collaboration" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAScswygsJowyIChm4PPHjk12km8XI85M5HrOEpqNBxwML80iFGmitmBPBgOhUfb9CMgvpT6G8XQ9CfW1L110nob2WeE6Kr-EyWE6STAiqPsbu8UbAjNzo8fNBIBycOMCk2KrecU0kVyC3sHI3OgtuGgatB9OGtEnOCIm6mp47lf2STpahe-pLnMzs4DZshLUc6-T1dkbiG6mMEcsN7BJUFb1qgxXJLhpvCfyVyYgwz1nf2u5zKiLQaj9f_TmQXwt7lBHJL0CqBvw"/>
+              <img alt="Team Collaboration" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAScswygsJowyIChm4PPHjk12km8XI85M5HrOEpqNBxwML80iFGmitmBPBgOhUfb9CMgvpT6G8XQ9CfW1L110nob2WeE6Kr-EyWE6STAiqPsbu8UbAjNzo8fNBIBycOMCk2KrecU0kVyC3sHI3OgtuGgatB9OGtEnOCIm6mp47lf2STpahe-pLnMzs4DZshLUc6-T1dkbiG6mMEcsN7BJUFb1qgxXJLhpvCfyVyYgwz1nf2u5zKiLQaj9f_TmQXwt7lBHJL0CqBvw" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-lg">
                 <h3 className="font-h2 text-h2 text-white mb-xs">Operational Precision</h3>
                 <p className="text-neutral-300 font-body-md">Back-end support that monitors flight timings and hotel check-ins in real-time for zero-delay experiences.</p>
@@ -129,13 +126,13 @@ const About: FC<AboutProps> = ({ onNavigate }) => {
             <div className="flex flex-col md:flex-row gap-md justify-center">
               <button 
                 className="bg-neutral-900 text-white px-lg py-sm font-label-bold rounded-lg hover:bg-neutral-800 transition-colors uppercase tracking-widest shadow-lg"
-                onClick={() => onNavigate('contact')}
+                onClick={() => navigate('/contact')}
               >
                 Inquire Now
               </button>
               <button 
                 className="bg-white text-neutral-900 px-lg py-sm font-label-bold rounded-lg hover:bg-neutral-50 transition-colors uppercase tracking-widest shadow-md"
-                onClick={() => onNavigate('home')}
+                onClick={() => navigate('/packages')}
               >
                 View Packages
               </button>
