@@ -43,13 +43,13 @@ const Navbar: React.FC = () => {
     scrollY,
     [0, 100],
     isHomePage 
-      ? ['rgba(17, 24, 39, 0)', 'rgba(17, 24, 39, 0.98)'] 
-      : ['rgba(17, 24, 39, 0.98)', 'rgba(17, 24, 39, 0.98)']
+      ? ['rgba(26, 19, 5, 0)', 'rgba(26, 19, 5, 0.98)'] 
+      : ['rgba(26, 19, 5, 0.98)', 'rgba(26, 19, 5, 0.98)']
   );
   const navbarBorder = useTransform(
     scrollY,
     [0, 100],
-    ['rgba(255, 255, 255, 0.1)', 'rgba(244, 196, 48, 0.2)']
+    ['rgba(255, 255, 255, 0.1)', 'rgba(201, 165, 76, 0.2)']
   );
 
   const navLinks = [
@@ -81,7 +81,7 @@ const Navbar: React.FC = () => {
           >
             <motion.div 
               layout
-              className={`relative rounded-full border-2 border-[#F4C430] overflow-hidden transition-all duration-500 shadow-xl shadow-[#F4C430]/10 ${
+              className={`relative rounded-full border-2 border-[#C9A54C] overflow-hidden transition-all duration-500 shadow-xl shadow-[#C9A54C]/10 ${
                 isScrolled ? 'h-10 w-10 sm:h-12 sm:w-12' : 'h-14 w-14 sm:h-16 sm:w-16'
               }`}
             >
@@ -93,7 +93,7 @@ const Navbar: React.FC = () => {
               }`}>
                 HAJI UMRAH
               </span>
-              <span className="font-bold tracking-[0.1em] sm:tracking-[0.2em] uppercase text-[#F4C430] text-[8px] sm:text-[10px]">
+              <span className="font-bold tracking-[0.1em] sm:tracking-[0.2em] uppercase text-[#C9A54C] text-[8px] sm:text-[10px]">
                 &amp; ZIYARA SERVICE
               </span>
             </div>
@@ -111,14 +111,14 @@ const Navbar: React.FC = () => {
                 {({ isActive }) => (
                   <>
                     <span className={`text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
-                      isActive ? 'text-[#F4C430]' : 'text-neutral-300 group-hover:text-white'
+                      isActive ? 'text-[#C9A54C]' : 'text-neutral-300 group-hover:text-white'
                     }`}>
                       {item.name}
                     </span>
                     {isActive && (
                       <motion.div 
                         layoutId="nav-underline"
-                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#F4C430] rounded-full shadow-[0_0_10px_rgba(244,196,48,0.5)]"
+                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C9A54C] rounded-full shadow-[0_0_10px_rgba(201,165,76,0.5)]"
                       />
                     )}
                   </>
@@ -131,7 +131,7 @@ const Navbar: React.FC = () => {
           <div className="hidden sm:flex items-center gap-6">
             <Link 
               to="/packages"
-              className="px-6 lg:px-8 py-3 bg-[#F4C430] text-neutral-900 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-500 hover:bg-white hover:scale-105 active:scale-95 shadow-lg shadow-[#F4C430]/20"
+              className="px-6 lg:px-8 py-3 bg-[#C9A54C] text-[#1A1305] rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-500 hover:bg-white hover:scale-105 active:scale-95 shadow-lg shadow-[#C9A54C]/20"
             >
               Book Now
             </Link>
@@ -140,7 +140,7 @@ const Navbar: React.FC = () => {
           {/* Tablet/Mobile Menu Toggle */}
           <button 
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden w-11 h-11 flex flex-col items-center justify-center gap-1.5 rounded-xl bg-[#F4C430]/10 text-[#F4C430] hover:bg-[#F4C430] hover:text-neutral-900 transition-all focus:outline-none focus:ring-2 focus:ring-[#F4C430]/50"
+            className="lg:hidden w-11 h-11 flex flex-col items-center justify-center gap-1.5 rounded-xl bg-[#C9A54C]/10 text-[#C9A54C] hover:bg-[#C9A54C] hover:text-[#1A1305] transition-all focus:outline-none focus:ring-2 focus:ring-[#C9A54C]/50"
             aria-label="Toggle Menu"
           >
             <motion.span 
@@ -167,19 +167,19 @@ const Navbar: React.FC = () => {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed inset-0 z-[110] bg-neutral-950 flex flex-col lg:hidden"
+            className="fixed inset-0 z-[110] bg-[#1A1305] flex flex-col lg:hidden"
           >
             {/* Header in mobile menu */}
             <div className="h-[100px] flex items-center justify-between px-4 sm:px-8 border-b border-white/5">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full border border-[#F4C430] overflow-hidden">
+                <div className="h-10 w-10 rounded-full border border-[#C9A54C] overflow-hidden">
                   <img src={logo} alt="Logo" className="w-full h-full object-cover" />
                 </div>
                 <span className="text-white font-black text-sm tracking-widest uppercase">Menu</span>
               </div>
               <button 
                 onClick={() => setIsOpen(false)}
-                className="w-11 h-11 flex items-center justify-center rounded-xl bg-white/5 text-white hover:bg-[#F4C430] hover:text-neutral-900 transition-all"
+                className="w-11 h-11 flex items-center justify-center rounded-xl bg-white/5 text-white hover:bg-[#C9A54C] hover:text-[#1A1305] transition-all"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -197,11 +197,11 @@ const Navbar: React.FC = () => {
                   <NavLink 
                     to={item.path}
                     className={({ isActive }) => `group flex items-center justify-between py-4 text-2xl sm:text-4xl font-black uppercase tracking-tighter transition-all ${
-                      isActive ? 'text-[#F4C430]' : 'text-neutral-500 hover:text-white'
+                      isActive ? 'text-[#C9A54C]' : 'text-neutral-500 hover:text-white'
                     }`}
                   >
                     <span>{item.name}</span>
-                    <ChevronRight className="w-6 h-6 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all text-[#F4C430]" />
+                    <ChevronRight className="w-6 h-6 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all text-[#C9A54C]" />
                   </NavLink>
                 </motion.div>
               ))}
@@ -217,7 +217,7 @@ const Navbar: React.FC = () => {
               <div className="flex flex-col gap-4">
                 <Link 
                   to="/packages"
-                  className="w-full bg-[#F4C430] text-neutral-900 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] text-center shadow-xl shadow-[#F4C430]/10 flex items-center justify-center gap-3"
+                  className="w-full bg-[#C9A54C] text-[#1A1305] py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] text-center shadow-xl shadow-[#C9A54C]/10 flex items-center justify-center gap-3"
                 >
                   Book Your Journey
                   <ChevronRight className="w-4 h-4" />
@@ -225,17 +225,17 @@ const Navbar: React.FC = () => {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <a 
-                    href="tel:08048102586"
+                    href="tel:08123379158"
                     className="bg-white/5 text-white py-4 rounded-2xl font-bold text-[10px] uppercase tracking-widest text-center border border-white/10 flex flex-col items-center justify-center gap-2 hover:bg-white/10 transition-all"
                   >
-                    <Phone className="w-4 h-4 text-[#F4C430]" />
+                    <Phone className="w-4 h-4 text-[#C9A54C]" />
                     Call
                   </a>
                   <Link 
                     to="/contact"
                     className="bg-white/5 text-white py-4 rounded-2xl font-bold text-[10px] uppercase tracking-widest text-center border border-white/10 flex flex-col items-center justify-center gap-2 hover:bg-white/10 transition-all"
                   >
-                    <MapPin className="w-4 h-4 text-[#F4C430]" />
+                    <MapPin className="w-4 h-4 text-[#C9A54C]" />
                     Office
                   </Link>
                 </div>

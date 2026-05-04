@@ -46,11 +46,11 @@ const Services: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12 sm:mb-20"
         >
-          <span className="bg-[#F4C430]/10 text-[#F4C430] px-4 sm:px-6 py-2 rounded-full font-black text-[8px] sm:text-[9px] uppercase tracking-widest mb-4 inline-block">
+          <span className="bg-[#C9A54C]/10 text-[#C9A54C] px-4 sm:px-6 py-2 rounded-full font-black text-[8px] sm:text-[9px] uppercase tracking-widest mb-4 inline-block">
             Support Ecosystem
           </span>
           <h1 className="font-display text-2xl sm:text-4xl md:text-5xl font-bold text-neutral-900 mb-4 sm:mb-6 leading-tight">
-            Comprehensive <span className="text-[#F4C430]">Spiritual Support</span>
+            Comprehensive <span className="text-[#C9A54C]">Spiritual Support</span>
           </h1>
           <p className="text-neutral-500 text-sm sm:text-lg max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
             We manage every detail of your sacred journey with meticulous care, allowing you to focus entirely on your worship and spiritual connection.
@@ -268,7 +268,7 @@ const Services: React.FC = () => {
                   className="bg-white/5 backdrop-blur-sm p-6 sm:p-8 rounded-3xl border border-white/10 hover:bg-white/10 transition-all"
                 >
                   <div className="text-[#F4C430] mb-3 sm:mb-4">{service.icon}</div>
-                  <h4 className="font-bold text-base sm:text-lg mb-2">{service.title}</h4>
+                  <h4 className="font-bold text-base sm:text-lg mb-2 text-white">{service.title}</h4>
                   <p className="text-[10px] sm:text-xs text-neutral-500 leading-relaxed">{service.desc}</p>
                 </motion.div>
               ))}
@@ -287,9 +287,9 @@ const Services: React.FC = () => {
           viewport={{ once: true }}
           className="text-center py-20 bg-white rounded-[3rem] shadow-xl border border-neutral-100"
         >
-          <h2 className="text-4xl font-bold text-neutral-900 mb-8">Have more questions?</h2>
+          <h2 className="text-4xl font-bold text-[#1A1305] mb-8">Have more questions?</h2>
           <button 
-            className="bg-neutral-900 text-white px-12 py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all hover:bg-[#F4C430] hover:text-neutral-900 active:scale-95 shadow-2xl shadow-neutral-900/20"
+            className="bg-[#1A1305] text-white px-12 py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all hover:bg-[#C9A54C] hover:text-[#1A1305] active:scale-95 shadow-2xl shadow-neutral-900/20"
             onClick={() => navigate('/contact')}
           >
             Contact Our Team

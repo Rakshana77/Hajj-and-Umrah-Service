@@ -9,6 +9,10 @@ import Footer from './components/Footer';
 import PackagesPage from './components/PackagesPage';
 import PackageDetailPage from './components/PackageDetailPage';
 import ReviewsPage from './components/ReviewsPage';
+import Login from './pages/Login';
+import Admin from './pages/Admin';
+import ProtectedRoute from './routes/ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
 
 // Page Transition Wrapper
 const PageTransition = ({ children }: { children: React.ReactNode }) => (
@@ -35,22 +39,36 @@ const AnimatedRoutes = () => {
         <Route path="/packages" element={<PageTransition><PackagesPage /></PageTransition>} />
         <Route path="/packages/:id" element={<PageTransition><PackageDetailPage /></PageTransition>} />
         <Route path="/reviews" element={<PageTransition><ReviewsPage /></PageTransition>} />
+        
+        {/* Admin Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route 
+          path="/secure-admin-portal-786" 
+          element={
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
     </AnimatePresence>
   );
 };
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const isAdminPage = location.pathname.startsWith('/secure-admin-portal-786') || location.pathname === '/login';
+
   return (
-    <Router>
-      <div className="min-h-screen bg-neutral-50 overflow-x-hidden">
-        <Navbar />
-        
-        <AnimatedRoutes />
+    <div className="min-h-screen bg-neutral-50 overflow-x-hidden">
+      {!isAdminPage && <Navbar />}
+      
+      <AnimatedRoutes />
 
-        <Footer />
+      {!isAdminPage && <Footer />}
 
-        {/* Global Floating WhatsApp CTA */}
+      {/* Global Floating WhatsApp CTA */}
+      {!isAdminPage && (
         <a 
           className="fixed bottom-8 right-8 bg-[#F4C430] text-neutral-900 p-4 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group" 
           href="https://wa.me/918048102586"
@@ -60,8 +78,18 @@ function App() {
           <span className="material-symbols-outlined text-3xl">chat</span>
           <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs group-hover:ml-3 transition-all duration-300 font-bold uppercase text-[10px] tracking-widest">WhatsApp Us</span>
         </a>
-      </div>
-    </Router>
+      )}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </AuthProvider>
   );
 }
 

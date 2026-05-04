@@ -1,175 +1,138 @@
-import type { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ShieldCheck, Compass, Utensils, Headset, ChevronRight, Phone, Mail } from 'lucide-react';
-import PackageSection from './PackageSection';
-import GalleryCarousel from './GalleryCarousel';
+import React from 'react';
 import HeroCarousel from './HeroCarousel';
+import PackageSection from './PackageSection';
+import { motion } from 'framer-motion';
+import { ShieldCheck, Clock, Users, MessageCircle, Phone, ArrowRight, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const Home: FC = () => {
+import PilgrimGallery from './PilgrimGallery';
+
+const Home: React.FC = () => {
   const navigate = useNavigate();
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 }
-    }
-  };
-
   return (
-    <main className="overflow-x-hidden">
-      {/* Hero Section */}
+    <main className="bg-[#FCFBF7]">
       <HeroCarousel />
-
+      
       {/* Trust Indicators */}
-      <section className="bg-white py-10 sm:py-16 border-b border-neutral-100 relative z-20">
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8"
-        >
+      <section className="bg-white py-12 sm:py-20 border-b border-neutral-100 relative z-20">
+        <div className="max-w-7xl mx-auto px-8 grid grid-cols-2 md:grid-cols-4 gap-8">
           {[
-            { icon: <ShieldCheck />, label: "Licensed Operator" },
-            { icon: <Compass />, label: "Religious Guidance" },
-            { icon: <Utensils />, label: "Halal Catering" },
-            { icon: <Headset />, label: "24/7 Group Support" }
+            { icon: <ShieldCheck />, label: "Trusted Operator" },
+            { icon: <Users />, label: "Expert Guidance" },
+            { icon: <Clock />, label: "24/7 Support" },
+            { icon: <Star className="fill-[#C9A54C]" />, label: "Premium Service" }
           ].map((item, i) => (
-            <motion.div 
-              key={i}
-              variants={itemVariants}
-              className="flex flex-col md:flex-row items-center gap-3 sm:gap-4 text-center md:text-left group"
-            >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#F4C430]/10 flex items-center justify-center text-[#F4C430] group-hover:scale-110 transition-transform">
+            <div key={i} className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left group">
+              <div className="w-12 h-12 rounded-2xl bg-[#C9A54C]/10 flex items-center justify-center text-[#C9A54C] group-hover:scale-110 transition-transform">
                 {item.icon}
               </div>
-              <span className="font-bold text-[10px] sm:text-sm text-neutral-900 uppercase tracking-widest">{item.label}</span>
-            </motion.div>
+              <span className="font-bold text-xs sm:text-sm text-[#1A1305] uppercase tracking-widest">{item.label}</span>
+            </div>
           ))}
-        </motion.div>
-      </section>
-
-      {/* Package Section */}
-      <PackageSection />
-
-      {/* Bento Grid: Inclusion Details */}
-      <section className="bg-neutral-50 py-16 sm:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]" />
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="mb-12 sm:mb-20 text-center sm:text-left"
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900 mb-4 sm:mb-6">Our Comprehensive <span className="text-[#F4C430]">Services</span></h2>
-            <p className="text-neutral-500 text-base sm:text-lg max-w-2xl leading-relaxed px-4 sm:px-0">Every detail of your journey is handled by our expert team with devotion and care.</p>
-          </motion.div>
-
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8"
-          >
-            {/* Cards using itemVariants */}
-            <motion.div variants={itemVariants} className="md:col-span-2 bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-2xl transition-all group">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#F4C430]/10 rounded-2xl flex items-center justify-center text-[#F4C430] mb-6 sm:mb-8 group-hover:rotate-12 transition-transform">
-                <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8" />
-              </div>
-              <h4 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-4">Visa & Insurance</h4>
-              <p className="text-neutral-500 text-sm sm:text-base leading-relaxed">Complete visa processing including mandatory medical insurance for a worry-free entry to the Kingdom.</p>
-            </motion.div>
-
-            <motion.div variants={itemVariants} className="bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-2xl transition-all group">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#F4C430]/10 rounded-2xl flex items-center justify-center text-[#F4C430] mb-6 sm:mb-8 group-hover:rotate-12 transition-transform">
-                <Utensils className="w-6 h-6 sm:w-8 sm:h-8" />
-              </div>
-              <h4 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-4">Indian Cuisine</h4>
-              <p className="text-neutral-500 leading-relaxed text-sm">Nutritious and delicious Indian meals prepared daily by our chefs.</p>
-            </motion.div>
-
-            <motion.div variants={itemVariants} className="bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-2xl transition-all group">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#F4C430]/10 rounded-2xl flex items-center justify-center text-[#F4C430] mb-6 sm:mb-8 group-hover:rotate-12 transition-transform">
-                <Compass className="w-6 h-6 sm:w-8 sm:h-8" />
-              </div>
-              <h4 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-4">Guided Ziyarat</h4>
-              <p className="text-neutral-500 leading-relaxed text-sm">Visit historical sites with expert guides explaining religious significance.</p>
-            </motion.div>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-12 flex justify-center"
-          >
-            <button 
-              onClick={() => navigate('/services')}
-              className="group flex items-center gap-3 text-neutral-900 font-black text-[10px] sm:text-xs uppercase tracking-widest hover:text-[#F4C430] transition-colors"
-            >
-              Explore All Services 
-              <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
-            </button>
-          </motion.div>
         </div>
       </section>
 
-      {/* Gallery Moments */}
-      <GalleryCarousel />
+      <PackageSection />
 
-      {/* Call to Action */}
-      <section className="py-16 sm:py-32 bg-white relative">
-        <div className="max-w-5xl mx-auto px-4 sm:px-8 text-center">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="p-8 sm:p-16 rounded-[2rem] sm:rounded-[3rem] bg-neutral-900 text-white relative overflow-hidden shadow-3xl"
-          >
-            <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]" />
-            
-            <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 relative z-10 leading-tight">
-              Ready to Embark on <br className="hidden sm:block"/>Your <span className="text-[#F4C430]">Sacred Journey?</span>
+      {/* Services Highlight */}
+      <section className="py-24 bg-white relative">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
+            <div className="max-w-2xl">
+              <span className="text-[#C9A54C] font-bold tracking-[0.2em] uppercase text-[10px] mb-4 block">Our Commitment</span>
+              <h2 className="text-3xl sm:text-5xl font-bold text-[#1A1305] leading-tight">
+                Comprehensive <span className="text-[#C9A54C]">Spiritual Services</span>
+              </h2>
+            </div>
+            <p className="text-neutral-500 max-w-sm italic">"Ensuring your sacred journey is smooth, comfortable, and spiritually fulfilling under J. Dasthagir Basha's leadership."</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {[
+              { 
+                icon: <ShieldCheck className="w-8 h-8" />, 
+                title: "Religious Guidance", 
+                desc: "Expert scholars and guides accompanying you to ensure all Umrah and Hajj rites are performed correctly." 
+              },
+              { 
+                icon: <Clock className="w-8 h-8" />, 
+                title: "Personalized Care", 
+                desc: "Our on-ground team handles every logistical detail, from hotel check-ins to local transport." 
+              },
+              { 
+                icon: <Users className="w-8 h-8" />, 
+                title: "Group Experience", 
+                desc: "A sense of community and family, ensuring every pilgrim feels safe and supported throughout." 
+              }
+            ].map((service, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="group p-10 rounded-[2rem] bg-[#FCFBF7] border border-neutral-100 hover:border-[#C9A54C]/30 hover:shadow-2xl transition-all duration-500"
+              >
+                <div className="w-16 h-16 bg-[#C9A54C]/10 rounded-2xl flex items-center justify-center mb-8 text-[#C9A54C] group-hover:bg-[#C9A54C] group-hover:text-white transition-all duration-500">
+                  {service.icon}
+                </div>
+                <h3 className="text-2xl font-bold text-[#1A1305] mb-4">{service.title}</h3>
+                <p className="text-neutral-500 leading-relaxed">{service.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <PilgrimGallery />
+
+      {/* CTA Section */}
+      <section className="py-24 px-8">
+        <div className="max-w-6xl mx-auto bg-[#1A1305] rounded-[3rem] p-12 sm:p-20 text-center relative overflow-hidden shadow-2xl">
+          <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]" />
+          
+          <div className="relative z-10">
+            <h2 className="text-3xl sm:text-5xl font-bold text-white mb-8 leading-tight">
+              Ready to Embark on <br className="hidden sm:block"/>Your <span className="text-[#C9A54C]">Sacred Journey?</span>
             </h2>
-            <p className="text-neutral-400 text-sm sm:text-base mb-8 sm:mb-10 max-w-2xl mx-auto relative z-10">
-              Our consultants are available to help you choose the best package for your spiritual needs and budget.
+            <p className="text-neutral-400 text-lg mb-12 max-w-2xl mx-auto italic">
+              "தமிழகத்தில் நம்பிக்கையான நிர்வாகம் - Trusted Hajj & Umrah Service in Tamil Nadu."
             </p>
             
-            <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 relative z-10">
-              <motion.a 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-[#F4C430] text-neutral-900 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl" 
-                href="tel:08048102586"
-              >
-                <Phone className="w-3.5 h-3.5" />
-                Call Now
-              </motion.a>
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-white hover:text-neutral-900 transition-all"
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <button 
                 onClick={() => navigate('/contact')}
+                className="w-full sm:w-auto bg-[#C9A54C] text-[#1A1305] px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white transition-all flex items-center justify-center gap-3 shadow-xl"
               >
-                <Mail className="w-3.5 h-3.5" />
-                Request Callback
-              </motion.button>
+                <Phone className="w-4 h-4" />
+                Enquire Now
+              </button>
+              <a 
+                href="https://wa.me/918123379158"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto border-2 border-white/20 text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white hover:text-[#1A1305] transition-all flex items-center justify-center gap-3"
+              >
+                <MessageCircle className="w-4 h-4" />
+                WhatsApp Booking
+              </a>
             </div>
-          </motion.div>
+
+            <div className="mt-16 pt-16 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-8">
+              {[
+                { label: 'Pilgrims Served', value: '10,000+' },
+                { label: 'Years Experience', value: '15+' },
+                { label: 'Hotel Partners', value: '50+' },
+                { label: 'Satisfied Families', value: '100%' }
+              ].map((stat, i) => (
+                <div key={i}>
+                  <p className="text-[#C9A54C] text-2xl font-black mb-1">{stat.value}</p>
+                  <p className="text-neutral-500 text-[10px] uppercase font-bold tracking-widest">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </main>

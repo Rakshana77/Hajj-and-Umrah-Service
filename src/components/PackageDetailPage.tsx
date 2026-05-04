@@ -1,289 +1,301 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   ChevronLeft, Star, MapPin, Clock, Plane, Hotel, Utensils, 
   Car, History, Calendar, Phone, CheckCircle2, ShieldCheck, 
-  Info, AlertCircle, Share2, Heart
+  Info, AlertCircle, Share2, Heart, Loader2, MessageCircle, Building
 } from 'lucide-react';
-import { packages } from '../data/packages';
+import { getPackages } from '../services/dataService';
 
 const PackageDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const pkg = packages.find(p => p.id === id);
+  const [pkg, setPkg] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [relatedPackages, setRelatedPackages] = useState<any[]>([]);
+
+  const defaultPackages = [
+    {
+      id: 'economy-umrah',
+      title: 'Economy Umrah Package',
+      price: '₹88,000',
+      journeyType: 'Umrah',
+      serviceClass: 'Budget',
+      proximity: '600m+',
+      duration: 15,
+      description: 'Affordable package with essential services for pilgrims seeking a spiritual journey on a budget. This package includes direct flights from Chennai, comfortable 3-star hotel accommodations in both Makkah and Madinah, and comprehensive visa processing.',
+      includes: ['Direct Flight', '3-Star Hotel', 'Visa Processing', 'Indian Food', 'Transport', 'Laundry Service', 'Ziyarat Tours'],
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAMakWnZcUsB2wqjn7Z8TuOLcYLA9wuWre215J1hwiXDgrBFYhESC_2sdnMLb0tF9KXaJUMhHWCQ0RoLcIbji3elBGlyTH_5K9GIl042hHmx4XetuEjzUfVb1eaAkRinG5sSuFSU-RC_q67RHalPyHRauW3Jlg1Wc1Hjpz9vLCEnGK1gPAWHuFEefxPS39p4v42gkMJG5H-d_UScJpwF0lNS2IIWHx4ifdJCDuknaTw_ikSlM5LMNdTbN3UHM3r7fQ9wHLTOl_WTvs'
+    },
+    {
+      id: 'deluxe-umrah',
+      title: 'Deluxe Royal Umrah',
+      price: 105000,
+      journeyType: 'Umrah',
+      serviceClass: 'Deluxe',
+      proximity: '0-200m',
+      duration: 15,
+      description: 'Comfortable stay with upgraded facilities and closer proximity to the Harams. Experience a worry-free pilgrimage with our premium flights, 4-star luxury accommodations, and gourmet Indian meals prepared daily by our expert chefs.',
+      includes: ['Premium Flight', '4-Star Hotel', 'Luxury Transport', 'Gourmet Indian Meals', 'Ziyarat included', 'Private Guided Umrah', 'Welcome Gift Kit'],
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCf6Qc_zCiI6TJ375gCkSZh4sGYrPPiDe6VYf94i5Edqpr9NC7oJdX1-xaa196kWznKrUp-9sYGF5w7Uhdzw_jLE_GERpzaIIp1j6n3lhEC0MCd98_9HyqZDvzFjSrZy_9meFLbiRID7JJurkYW-crAZeN52Vmljy61r1M558CBpkiXOqVATrcIQ90BvswNS8BTTARS54tOjnwMSRF7wNDmDLMtsln7IvsGGv3AZhjbUeU71xUzVXDjCG-yWwwfl023TvIQdww5OIY'
+    },
+    {
+      id: 'premium-umrah',
+      title: '3 Umrah + Ziyara Premium',
+      price: 120000,
+      journeyType: 'Umrah',
+      serviceClass: 'Premium',
+      proximity: '200-600m',
+      duration: 23,
+      description: 'Premium experience with multiple Umrah opportunities and comprehensive guided Ziyara. Our flagship package offers 5-star hotel stays within steps of the Haram, VIP ground services, and full spiritual guidance from our experienced scholars.',
+      includes: ['Business Class Option', '5-Star Hotel', 'VIP Service', 'Full Spiritual Guide', 'Exclusive Ziyarat', 'Luxury Private Transport', '5-Star Buffet Meals'],
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEw4gl2Oc7NH1wSl-cpeWOpt7BFun8a44Nyh26hB7QsjlSTUEJFG5EzIeHzi42InBu0zMJ_rlAC5jk2PZkeXM0uKiOr5-TbSBP1tYDZmQqIpzq0TxZWiID6UTliYXVaTGORQzMoFmDZrXoj2pm3k3x01D0O55Cg7tdqWIdTaooTzT5PgB3z8h3CRsexc0o7xw2-RmvCfmLzwvHeOSc4rUpud_Wr-UKaERbyGOrc7dxzUE-lSnIg6Zx7iVScYMpW5MP6KAEmsewSKc'
+    }
+  ];
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    const fetchPkg = async () => {
+      try {
+        let allPkgs = await getPackages();
+        if (!allPkgs || allPkgs.length === 0) {
+          allPkgs = defaultPackages;
+        }
+        
+        const foundPkg = allPkgs.find(p => p.id === id);
+        if (foundPkg) {
+          setPkg(foundPkg);
+          const related = allPkgs
+            .filter(p => p.id !== id && (p.journeyType === foundPkg.journeyType))
+            .slice(0, 3);
+          setRelatedPackages(related);
+        }
+      } catch (err) {
+        console.error("Error fetching package:", err);
+        const foundPkg = defaultPackages.find(p => p.id === id);
+        if (foundPkg) setPkg(foundPkg);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPkg();
   }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#FCFBF7]">
+        <Loader2 className="text-[#C9A54C] animate-spin mb-4" size={48} />
+        <p className="text-neutral-500 font-medium italic text-lg">Preparing sacred details...</p>
+      </div>
+    );
+  }
 
   if (!pkg) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
-        <div className="bg-red-50 p-6 rounded-full mb-6">
-          <AlertCircle className="w-12 h-12 text-red-500" />
+      <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center bg-[#FCFBF7]">
+        <div className="bg-red-50 p-10 rounded-full mb-8 shadow-inner">
+          <AlertCircle className="w-16 h-16 text-red-500" />
         </div>
-        <h1 className="text-3xl font-bold mb-4">Package Not Found</h1>
-        <p className="text-neutral-500 mb-8 max-w-md">
-          The package you are looking for might have been removed or the link is incorrect.
+        <h1 className="text-4xl font-bold mb-4 text-[#1A1305]">Package Not Found</h1>
+        <p className="text-neutral-500 mb-10 max-w-md italic">
+          The journey you are looking for might have been moved or is currently unavailable.
         </p>
         <button 
           onClick={() => navigate('/packages')}
-          className="bg-neutral-900 text-white px-8 py-4 rounded-xl font-bold"
+          className="bg-[#1A1305] text-[#C9A54C] px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl"
         >
-          Back to Packages
+          Explore All Journeys
         </button>
       </div>
     );
   }
 
-  const relatedPackages = packages
-    .filter(p => p.id !== pkg.id && (p.category === pkg.category || p.type === pkg.type))
-    .slice(0, 3);
-
   return (
-    <div className="min-h-screen bg-white pt-20 sm:pt-24 pb-20">
+    <div className="min-h-screen bg-[#FCFBF7] pt-24 sm:pt-32 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         {/* Navigation Breadcrumb */}
-        <div className="flex items-center gap-2 sm:gap-4 mb-6 sm:mb-8">
+        <div className="flex items-center gap-4 mb-10">
           <button 
             onClick={() => navigate(-1)}
-            className="p-1.5 sm:p-2 hover:bg-neutral-100 rounded-full transition-colors"
+            className="w-12 h-12 bg-white border border-neutral-100 rounded-full flex items-center justify-center hover:bg-[#C9A54C] hover:text-white transition-all shadow-xl"
           >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+            <ChevronLeft className="w-6 h-6" />
           </button>
-          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm text-neutral-500 overflow-hidden">
-            <Link to="/" className="hover:text-neutral-900 whitespace-nowrap">Home</Link>
+          <div className="flex items-center gap-3 text-[10px] sm:text-xs font-black uppercase tracking-widest text-neutral-400">
+            <Link to="/" className="hover:text-[#1A1305]">Home</Link>
             <span>/</span>
-            <Link to="/packages" className="hover:text-neutral-900 whitespace-nowrap">Packages</Link>
+            <Link to="/packages" className="hover:text-[#1A1305]">Packages</Link>
             <span>/</span>
-            <span className="text-neutral-900 font-bold truncate">{pkg.name}</span>
+            <span className="text-[#C9A54C] truncate">{pkg.title}</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16">
           {/* Main Content (Left Column) */}
-          <div className="lg:col-span-8 space-y-10 sm:space-y-12">
+          <div className="lg:col-span-8 space-y-12 sm:space-y-16">
             {/* Hero Section */}
-            <section className="relative rounded-[1.5rem] sm:rounded-3xl overflow-hidden shadow-2xl">
-              <div className="aspect-[4/3] sm:aspect-[16/9] w-full">
+            <section className="relative rounded-[3rem] overflow-hidden shadow-2xl border-b-8 border-[#C9A54C]">
+              <div className="aspect-[16/9] w-full">
                 <img 
-                  src={pkg.bannerImage} 
-                  alt={pkg.name} 
+                  src={pkg.image} 
+                  alt={pkg.title} 
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 sm:p-12">
-                <div className="flex flex-wrap gap-2 sm:gap-3 mb-3 sm:mb-4">
-                  {pkg.popular && (
-                    <span className="bg-[#F4C430] text-black px-3 sm:px-4 py-1 rounded-full text-[9px] sm:text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
-                      <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-black" />
-                      Most Popular
-                    </span>
-                  )}
-                  <span className="bg-white/20 backdrop-blur-md text-white px-3 sm:px-4 py-1 rounded-full text-[9px] sm:text-xs font-bold uppercase tracking-wider">
-                    {pkg.category} Package
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1A1305]/95 via-[#1A1305]/30 to-transparent flex flex-col justify-end p-8 sm:p-16">
+                <div className="flex flex-wrap gap-3 mb-6">
+                  <span className="bg-[#C9A54C] text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl">
+                    <Star className="w-3.5 h-3.5 fill-white" />
+                    {pkg.serviceClass} Class
+                  </span>
+                  <span className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl">
+                    <MapPin className="w-3.5 h-3.5" />
+                    {pkg.proximity} to Haram
                   </span>
                 </div>
-                <h1 className="text-2xl sm:text-3xl md:text-5xl font-display font-bold text-white mb-3 sm:mb-4">
-                  {pkg.name}
+                <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                  {pkg.title}
                 </h1>
-                <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-white/90 text-xs sm:text-base">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#F4C430]" />
-                    {pkg.distance}m from Haram
+                <div className="flex flex-wrap items-center gap-10 text-white/90">
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-8 h-8 text-[#C9A54C]" />
+                    <span className="font-bold text-xl uppercase">{pkg.duration} Days</span>
                   </div>
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#F4C430]" />
-                    {pkg.duration}
-                  </div>
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <Plane className="w-4 h-4 sm:w-5 sm:h-5 text-[#F4C430]" />
-                    {pkg.departureCity}
+                  <div className="flex items-center gap-3">
+                    {pkg.journeyType === 'Umrah' ? <Building className="w-8 h-8 text-[#C9A54C]" /> : <Plane className="w-8 h-8 text-[#C9A54C]" />}
+                    <span className="font-bold text-xl uppercase">{pkg.journeyType}</span>
                   </div>
                 </div>
               </div>
             </section>
 
-            {/* Quick Actions (Mobile Only) */}
-            <div className="lg:hidden grid grid-cols-2 gap-4">
-              <button className="flex items-center justify-center gap-2 py-4 border border-neutral-100 rounded-xl font-bold">
-                <Heart className="w-5 h-5" /> Save
-              </button>
-              <button className="flex items-center justify-center gap-2 py-4 border border-neutral-100 rounded-xl font-bold">
-                <Share2 className="w-5 h-5" /> Share
-              </button>
+            {/* Quick Details Bar */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {[
+                    { icon: Plane, label: 'Journey', value: pkg.journeyType },
+                    { icon: Star, label: 'Service', value: pkg.serviceClass },
+                    { icon: MapPin, label: 'Proximity', value: pkg.proximity },
+                    { icon: Clock, label: 'Duration', value: `${pkg.duration} Days` }
+                ].map((item, i) => (
+                    <div key={i} className="bg-white p-6 rounded-[2rem] border border-neutral-100 shadow-xl text-center flex flex-col items-center">
+                        <item.icon className="w-6 h-6 text-[#C9A54C] mb-3" />
+                        <p className="text-[9px] font-black text-neutral-400 uppercase tracking-widest mb-1">{item.label}</p>
+                        <p className="text-[#1A1305] font-bold text-sm">{item.value}</p>
+                    </div>
+                ))}
             </div>
 
             {/* Overview */}
-            <section>
-              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
-                <Info className="w-5 h-5 sm:w-6 sm:h-6 text-[#F4C430]" />
-                Package Overview
+            <section className="bg-white p-10 sm:p-16 rounded-[3rem] border border-neutral-100 shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 left-10 w-24 h-2 bg-[#C9A54C] rounded-b-full shadow-lg shadow-[#C9A54C]/40" />
+              <h2 className="text-2xl sm:text-3xl font-bold mb-8 flex items-center gap-4 text-[#1A1305]">
+                <Info className="w-8 h-8 text-[#C9A54C]" />
+                Package Description
               </h2>
-              <p className="text-neutral-600 leading-relaxed text-sm sm:text-lg">
-                {pkg.fullDescription}
+              <p className="text-neutral-500 leading-relaxed text-lg italic">
+                {pkg.description}
               </p>
             </section>
 
             {/* Inclusions Grid */}
             <section>
-              <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 flex items-center gap-3">
-                <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#F4C430]" />
-                What's Included
+              <h2 className="text-2xl sm:text-3xl font-bold mb-10 flex items-center gap-4 text-[#1A1305]">
+                <ShieldCheck className="w-8 h-8 text-[#C9A54C]" />
+                Included Privileges
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                {[
-                  { icon: Plane, label: 'Visa Support', value: pkg.inclusions.visa },
-                  { icon: Hotel, label: 'Accommodation', value: `Makkah: ${pkg.inclusions.hotelMakkah}` },
-                  { icon: MapPin, label: 'Proximity', value: pkg.inclusions.distanceHaram },
-                  { icon: Utensils, label: 'Food & Dining', value: pkg.inclusions.food },
-                  { icon: Car, label: 'Transport', value: pkg.inclusions.transport },
-                  { icon: History, label: 'Ziyarat', value: pkg.inclusions.ziyarat },
-                ].map((item, idx) => (
-                  <div key={idx} className="flex gap-4 p-5 sm:p-6 bg-neutral-50 rounded-2xl border border-neutral-100">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl flex items-center justify-center shrink-0 shadow-sm">
-                      <item.icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#F4C430]" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {pkg.includes?.map((item: string, idx: number) => (
+                  <div key={idx} className="flex items-center gap-6 p-6 bg-white rounded-[2rem] border border-neutral-100 shadow-lg hover:border-[#C9A54C]/30 transition-all group hover:bg-[#FCFBF7]">
+                    <div className="w-14 h-14 bg-[#FCFBF7] rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-[#C9A54C] transition-all shadow-md group-hover:shadow-[#C9A54C]/30">
+                      <CheckCircle2 className="w-7 h-7 text-[#C9A54C] group-hover:text-white" />
                     </div>
-                    <div>
-                      <p className="font-bold text-neutral-900 mb-1 text-sm sm:text-base">{item.label}</p>
-                      <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed">{item.value}</p>
-                    </div>
+                    <span className="font-bold text-[#1A1305] text-lg">{item}</span>
                   </div>
                 ))}
               </div>
             </section>
 
-            {/* Gallery */}
-            {pkg.gallery.length > 0 && (
-              <section>
-                <h2 className="text-2xl font-bold mb-8">Accommodation Gallery</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {pkg.gallery.map((img, idx) => (
-                    <motion.div 
-                      key={idx}
-                      whileHover={{ scale: 1.02 }}
-                      className="aspect-square rounded-2xl overflow-hidden cursor-zoom-in"
-                    >
-                      <img src={img} alt="Gallery" className="w-full h-full object-cover" loading="lazy" />
-                    </motion.div>
-                  ))}
-                </div>
-              </section>
-            )}
-
             {/* Important Info */}
-            <section className="bg-[#FFF9E6] p-8 rounded-3xl border border-[#F4C430]/20">
-              <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                <AlertCircle className="w-6 h-6 text-[#F4C430]" />
-                Important Information
+            <section className="bg-[#1A1305] p-10 sm:p-16 rounded-[3rem] relative overflow-hidden shadow-3xl">
+               <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]" />
+              <h2 className="text-2xl sm:text-3xl font-bold mb-10 flex items-center gap-4 text-white relative z-10">
+                <AlertCircle className="w-8 h-8 text-[#C9A54C]" />
+                Essential Guidelines
               </h2>
-              <div className="space-y-4">
-                <div className="flex gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-[#F4C430] shrink-0 mt-1" />
-                  <p className="text-neutral-700">Rates are subject to change based on actual dates and availability.</p>
-                </div>
-                <div className="flex gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-[#F4C430] shrink-0 mt-1" />
-                  <p className="text-neutral-700">Passport must be valid for at least 6 months from the date of travel.</p>
-                </div>
-                <div className="flex gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-[#F4C430] shrink-0 mt-1" />
-                  <p className="text-neutral-700">Cancellation policies apply as per Saudi Ministry of Hajj & Umrah.</p>
-                </div>
+              <div className="space-y-6 relative z-10">
+                {[
+                  'Rates are subject to seasonal changes and availability.',
+                  'Passport must be valid for minimum 6 months from departure.',
+                  'Cancellation follows Saudi Ministry of Hajj & Umrah policy.',
+                  'All local transportation and guide services included.'
+                ].map((text, i) => (
+                  <div key={i} className="flex gap-4 group">
+                    <CheckCircle2 className="w-6 h-6 text-[#C9A54C] shrink-0" />
+                    <p className="text-neutral-400 font-medium group-hover:text-white transition-colors">{text}</p>
+                  </div>
+                ))}
               </div>
             </section>
           </div>
 
           {/* Sticky Sidebar (Right Column) */}
           <aside className="lg:col-span-4">
-            <div className="sticky top-32 space-y-6">
-              <div className="bg-white p-8 rounded-3xl border border-neutral-100 shadow-2xl relative overflow-hidden">
-                {/* Decorative Pattern */}
-                <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.03] pointer-events-none">
-                  <svg width="100%" height="100%" viewBox="0 0 100 100">
-                    <path d="M50 0 L100 50 L50 100 L0 50 Z" fill="currentColor" />
-                  </svg>
-                </div>
-
-                <div className="mb-6 sm:mb-8">
-                  <p className="text-neutral-500 font-bold text-[10px] uppercase tracking-widest mb-1 sm:mb-2">Starting from</p>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl sm:text-5xl font-black text-neutral-900">₹{pkg.price.toLocaleString()}</span>
-                    <span className="text-xs sm:text-sm text-neutral-400 font-medium">/ person</span>
+            <div className="sticky top-32 space-y-8">
+              <div className="bg-white p-12 rounded-[3.5rem] border border-neutral-100 shadow-3xl relative overflow-hidden">
+                <div className="mb-12 text-center">
+                  <p className="text-neutral-400 font-black text-[10px] uppercase tracking-[0.4em] mb-4">Investment for Journey</p>
+                  <div className="flex flex-col items-center">
+                    <span className="text-6xl font-black text-[#1A1305] mb-2 tracking-tight">
+                        {typeof pkg.price === 'number' ? `₹${pkg.price.toLocaleString()}` : pkg.price}
+                    </span>
+                    <span className="text-xs text-neutral-400 font-bold uppercase tracking-[0.2em]">Full Journey Price</span>
                   </div>
                 </div>
 
-                <div className="space-y-3 sm:space-y-4">
-                  <button className="w-full bg-[#F4C430] text-black py-4 sm:py-5 rounded-xl sm:rounded-2xl font-black text-base sm:text-lg hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-[#F4C430]/20 flex items-center justify-center gap-3">
-                    <Calendar className="w-5 h-5 sm:w-6 sm:h-6" />
-                    Book Now
-                  </button>
+                <div className="space-y-5">
                   <a 
-                    href={`https://wa.me/918048102586?text=I'm interested in the ${pkg.name} package`}
+                    href={`https://wa.me/918123379158?text=I'm interested in the ${pkg.title} package`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full bg-neutral-900 text-white py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg hover:bg-neutral-800 transition-all flex items-center justify-center gap-3"
+                    className="w-full bg-[#1A1305] text-[#C9A54C] py-7 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] hover:bg-[#C9A54C] hover:text-white transition-all flex items-center justify-center gap-5 shadow-2xl shadow-[#1A1305]/20 active:scale-95"
                   >
-                    <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
-                    WhatsApp Enquiry
+                    <MessageCircle className="w-7 h-7" />
+                    WhatsApp Booking
                   </a>
+                  <Link 
+                    to="/contact"
+                    className="w-full bg-[#FCFBF7] text-[#1A1305] border-2 border-neutral-100 py-7 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] hover:border-[#C9A54C] transition-all flex items-center justify-center gap-5 active:scale-95 shadow-lg"
+                  >
+                    <Phone className="w-6 h-6" />
+                    Enquire via Call
+                  </Link>
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-neutral-50 flex items-center justify-between">
-                  <div className="flex -space-x-2 sm:-space-x-3">
-                    {[1, 2, 3, 4].map(i => (
-                      <div key={i} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white bg-neutral-200 overflow-hidden">
-                        <img src={`https://i.pravatar.cc/100?u=${i}`} alt="user" />
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-[10px] sm:text-xs text-neutral-400 font-medium">
-                    <span className="text-neutral-900 font-bold">48 people</span> booked this month
-                  </p>
+                <div className="mt-12 pt-12 border-t border-neutral-100 text-center">
+                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-4 italic">Guided by</p>
+                  <p className="text-[#1A1305] font-black text-2xl tracking-tight">J. Dasthagir Basha</p>
+                  <p className="text-neutral-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">Principal Guide & Admin</p>
                 </div>
               </div>
 
               {/* Trust Badges */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <div className="p-3 sm:p-4 bg-neutral-50 rounded-2xl border border-neutral-100 flex flex-col items-center text-center">
-                  <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#F4C430] mb-2" />
-                  <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider">Secured Booking</p>
-                </div>
-                <div className="p-3 sm:p-4 bg-neutral-50 rounded-2xl border border-neutral-100 flex flex-col items-center text-center">
-                  <Star className="w-5 h-5 sm:w-6 sm:h-6 text-[#F4C430] mb-2" />
-                  <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider">Top Rated Guide</p>
+              <div className="grid grid-cols-1 gap-4">
+                <div className="p-10 bg-[#1A1305] rounded-[2.5rem] flex items-center gap-8 shadow-2xl group overflow-hidden relative">
+                   <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]" />
+                  <div className="w-16 h-16 bg-[#C9A54C] rounded-2xl flex items-center justify-center shrink-0 shadow-xl group-hover:scale-110 transition-transform relative z-10">
+                    <ShieldCheck className="text-white w-10 h-10" />
+                  </div>
+                  <div className="relative z-10">
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#C9A54C] mb-1">Authenticated</p>
+                      <p className="text-white font-bold text-sm tracking-wide">Ministry Licensed Travel Service</p>
+                  </div>
                 </div>
               </div>
             </div>
           </aside>
         </div>
-
-        {/* Related Packages */}
-        <section className="mt-24">
-          <h2 className="text-3xl font-display font-bold mb-12">Related Packages</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {relatedPackages.map(p => (
-              <Link to={`/packages/${p.id}`} key={p.id} className="group">
-                <div className="bg-white rounded-2xl overflow-hidden border border-neutral-100 shadow-sm hover:shadow-xl transition-all h-full">
-                  <div className="h-48 overflow-hidden">
-                    <img src={p.image} alt={p.name} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="font-bold text-lg mb-2 group-hover:text-[#F4C430] transition-colors">{p.name}</h3>
-                    <p className="text-2xl font-black text-neutral-900 mb-4">₹{p.price.toLocaleString()}</p>
-                    <div className="flex items-center gap-4 text-xs text-neutral-400 font-bold uppercase tracking-widest">
-                      <span>{p.type}</span>
-                      <span>•</span>
-                      <span>{p.duration}</span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
       </div>
     </div>
   );

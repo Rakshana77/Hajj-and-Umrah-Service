@@ -1,130 +1,148 @@
-import type { FC } from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Phone, MapPin, Mail, Send, CheckCircle2, MessageCircle } from 'lucide-react';
 
-const Contact: FC = () => {
+const Contact: React.FC = () => {
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-8 pt-32 sm:pt-40 pb-20">
-      {/* Hero Section */}
-      <section className="mb-xl text-center">
-        <h1 className="font-display text-display mb-md text-neutral-900">Reach Out to Your Trusted Hajj Partners</h1>
-        <p className="font-body-lg text-body-lg text-neutral-600 max-w-2xl mx-auto">
-          Embark on your spiritual journey with the assurance of premium service and religious precision. Our team is dedicated to guiding you through every step of your Hajj and Umrah pilgrimage.
-        </p>
-      </section>
+    <main className="bg-[#FCFBF7] min-h-screen pt-32 sm:pt-40 pb-20">
+      <div className="max-w-7xl mx-auto px-8">
+        {/* Header Section */}
+        <section className="text-center mb-20">
+          <span className="text-[#C9A54C] font-bold tracking-[0.2em] uppercase text-[10px] mb-4 block">தமிழகத்தில் நம்பிக்கையான நிர்வாகம்</span>
+          <h1 className="font-display text-4xl sm:text-6xl font-bold text-[#1A1305] mb-6">Contact Our Experts</h1>
+          <p className="text-neutral-500 max-w-2xl mx-auto italic text-lg leading-relaxed">
+            "Your sacred journey is our responsibility. Reach out to us for trusted Hajj and Umrah guidance."
+          </p>
+        </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
-        {/* Contact Details (Asymmetric Column) */}
-        <div className="lg:col-span-5 space-y-md">
-          <div className="bg-white border-t-4 border-[#F4C430] shadow-[0_20px_40px_rgba(11,11,11,0.04)] p-lg rounded-xl">
-            <h2 className="font-h2 text-h2 mb-lg text-neutral-900">Contact Details</h2>
-            <div className="space-y-lg">
-              <div className="flex items-start gap-md">
-                <div className="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full shrink-0">
-                  <span className="material-symbols-outlined text-[#F4C430]">call</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+          {/* Info Column */}
+          <div className="lg:col-span-5 space-y-8">
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="bg-white p-10 rounded-[2rem] border border-neutral-100 shadow-xl"
+            >
+              <h2 className="text-2xl font-bold text-[#1A1305] mb-10">Business Details</h2>
+              <div className="space-y-10">
+                <div className="flex items-start gap-6">
+                  <div className="w-12 h-12 bg-[#C9A54C]/10 rounded-2xl flex items-center justify-center shrink-0">
+                    <Phone className="text-[#C9A54C] w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-400 font-black uppercase tracking-widest mb-2">Call Us</p>
+                    <div className="space-y-1">
+                      <p className="text-lg font-bold text-[#1A1305]">08123379158</p>
+                      <p className="text-lg font-bold text-[#1A1305]">88071 14887</p>
+                      <p className="text-lg font-bold text-[#1A1305]">75581 98870</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-label-bold text-label-bold text-neutral-400 uppercase tracking-widest mb-xs">Call Us</p>
-                  <a href="tel:08048102586" className="font-h3 text-h3 text-neutral-900 hover:text-[#F4C430] transition-colors font-bold">08048102586</a>
+
+                <div className="flex items-start gap-6">
+                  <div className="w-12 h-12 bg-[#C9A54C]/10 rounded-2xl flex items-center justify-center shrink-0">
+                    <MapPin className="text-[#C9A54C] w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-400 font-black uppercase tracking-widest mb-2">Our Office</p>
+                    <p className="text-lg font-bold text-[#1A1305] leading-relaxed">
+                      No. 16, Ajmal Complex, E.C.R Road,<br/>
+                      (Roundana Opp), Kottakuppam,<br/>
+                      Puducherry
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-6">
+                  <div className="w-12 h-12 bg-green-500/10 rounded-2xl flex items-center justify-center shrink-0">
+                    <MessageCircle className="text-green-500 w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-400 font-black uppercase tracking-widest mb-2">WhatsApp Support</p>
+                    <p className="text-lg font-bold text-[#1A1305]">0541554916 (Saudi)</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-start gap-md">
-                <div className="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full shrink-0">
-                  <span className="material-symbols-outlined text-[#F4C430]">mail</span>
-                </div>
-                <div>
-                  <p className="font-label-bold text-label-bold text-neutral-400 uppercase tracking-widest mb-xs">Email Address</p>
-                  <a href="mailto:arshumrah2022@gmail.com" className="font-h3 text-h3 text-neutral-900 hover:text-[#F4C430] transition-colors font-bold">arshumrah2022@gmail.com</a>
-                </div>
+
+              <div className="mt-12 pt-10 border-t border-neutral-100">
+                <p className="text-sm font-bold text-[#C9A54C] mb-2 uppercase tracking-widest">Administrator</p>
+                <p className="text-xl font-black text-[#1A1305]">J. Dasthagir Basha</p>
               </div>
-              <div className="flex items-start gap-md">
-                <div className="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full shrink-0">
-                  <span className="material-symbols-outlined text-[#F4C430]">location_on</span>
-                </div>
-                <div>
-                  <p className="font-label-bold text-label-bold text-neutral-400 uppercase tracking-widest mb-xs">Location</p>
-                  <p className="font-h3 text-h3 text-neutral-900 font-bold">India, Chennai</p>
-                </div>
+            </motion.div>
+
+            {/* Map Placeholder */}
+            <div className="h-64 rounded-[2rem] overflow-hidden shadow-xl border border-neutral-100 relative group">
+              <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Map" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjVQ6LmeXVNZw_P5_oNnMFc5nzGiDHEkLpjq_JraM8t_KWJPv23gCVZjRO9Ds5gyGiC9yyzEemsYOB6AcC5fg7BVbFleWBw9q0Ftw9ih-GkFwR3NgijwsR0Tgb7_7cs1si7Qv-gdmseCG3XdZE_jGfHmu6qbhkWCaxJQywY_oQ3YWGVhY3702PfH1x5lb5OJWQpluyWy8fOV2HLuix65wSfPjQWTPFMhp_5rPJSiHEZYpoxoQYXKflP2yPuQCXGkQtTmMUMUoFcSI" />
+              <div className="absolute inset-0 bg-neutral-900/10 flex items-center justify-center">
+                <a 
+                  href="https://www.google.com/maps/search/Haji+Umrah+and+Ziyara+Service+Kottakuppam" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-white text-[#1A1305] px-8 py-3 font-black text-xs uppercase tracking-widest shadow-2xl rounded-xl hover:bg-[#C9A54C] transition-all"
+                >
+                  Open Maps
+                </a>
               </div>
-            </div>
-            <div className="mt-xl pt-xl border-t border-neutral-100 flex gap-md">
-              <a className="w-10 h-10 flex items-center justify-center border border-neutral-200 rounded hover:border-[#F4C430] transition-colors" href="#">
-                <span className="material-symbols-outlined text-neutral-900">public</span>
-              </a>
-              <a className="w-10 h-10 flex items-center justify-center border border-neutral-200 rounded hover:border-[#F4C430] transition-colors" href="#">
-                <span className="material-symbols-outlined text-neutral-900">diversity_3</span>
-              </a>
             </div>
           </div>
 
-          {/* Map Placeholder */}
-          <div className="h-64 rounded-xl overflow-hidden shadow-[0_20px_40px_rgba(11,11,11,0.04)] relative">
-            <img className="w-full h-full object-cover" alt="Minimalist monochromatic city map of Chennai showing primary arterial roads and urban layout in a clean aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjVQ6LmeXVNZw_P5_oNnMFc5nzGiDHEkLpjq_JraM8t_KWJPv23gCVZjRO9Ds5gyGiC9yyzEemsYOB6AcC5fg7BVbFleWBw9q0Ftw9ih-GkFwR3NgijwsR0Tgb7_7cs1si7Qv-gdmseCG3XdZE_jGfHmu6qbhkWCaxJQywY_oQ3YWGVhY3702PfH1x5lb5OJWQpluyWy8fOV2HLuix65wSfPjQWTPFMhp_5rPJSiHEZYpoxoQYXKflP2yPuQCXGkQtTmMUMUoFcSI" loading="lazy" />
-            <div className="absolute inset-0 bg-neutral-900/10 flex items-center justify-center">
-              <a 
-                href="https://www.google.com/maps/search/Arsh+Hajj+and+Umrah+Chennai" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-white px-6 py-2 font-label-bold shadow-xl rounded-full hover:bg-[#F4C430] transition-colors"
-              >
-                Open in Google Maps
-              </a>
-            </div>
-          </div>
-        </div>
+          {/* Form Column */}
+          <div className="lg:col-span-7">
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="bg-white p-10 rounded-[2rem] border border-neutral-100 shadow-xl"
+            >
+              <h2 className="text-2xl font-bold text-[#1A1305] mb-10">Send an Inquiry</h2>
+              <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-neutral-400 uppercase tracking-widest px-1">Full Name</label>
+                    <input className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none" placeholder="Your Name" type="text"/>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-neutral-400 uppercase tracking-widest px-1">Phone Number</label>
+                    <input className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none" placeholder="+91 00000 00000" type="tel"/>
+                  </div>
+                </div>
 
-        {/* Contact Form */}
-        <div className="lg:col-span-7">
-          <div className="bg-white border-t-4 border-[#F4C430] shadow-[0_20px_40px_rgba(11,11,11,0.04)] p-lg rounded-xl">
-            <h2 className="font-h2 text-h2 mb-lg text-neutral-900">Inquiry Form</h2>
-            <form className="space-y-md" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
-                <div className="space-y-xs">
-                  <label className="font-label-bold text-neutral-700">Full Name</label>
-                  <input className="w-full border-neutral-300 focus:ring-0 focus:border-neutral-900 border-b-2 border-b-neutral-200 focus:border-b-[#F4C430] transition-all py-3" placeholder="John Doe" type="text"/>
-                </div>
-                <div className="space-y-xs">
-                  <label className="font-label-bold text-neutral-700">Email Address</label>
-                  <input className="w-full border-neutral-300 focus:ring-0 focus:border-neutral-900 border-b-2 border-b-neutral-200 focus:border-b-[#F4C430] transition-all py-3" placeholder="john@example.com" type="email"/>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
-                <div className="space-y-xs">
-                  <label className="font-label-bold text-neutral-700">Phone Number</label>
-                  <input className="w-full border-neutral-300 focus:ring-0 focus:border-neutral-900 border-b-2 border-b-neutral-200 focus:border-b-[#F4C430] transition-all py-3" placeholder="+91 000 000 0000" type="tel"/>
-                </div>
-                <div className="space-y-xs">
-                  <label className="font-label-bold text-neutral-700">Preferred Package</label>
-                  <select className="w-full border-neutral-300 focus:ring-0 focus:border-neutral-900 border-b-2 border-b-neutral-200 focus:border-b-[#F4C430] transition-all py-3 bg-white">
-                    <option>Select Package Type</option>
-                    <option>Hajj Package</option>
-                    <option>Umrah Package</option>
-                    <option>Spiritual Group Tour</option>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-neutral-400 uppercase tracking-widest px-1">Preferred Package</label>
+                  <select className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none appearance-none">
+                    <option>Economy Umrah Package</option>
+                    <option>Deluxe Umrah Package</option>
+                    <option>3 Umrah + Ziyara Premium Package</option>
                   </select>
                 </div>
-              </div>
-              <div className="space-y-xs">
-                <label className="font-label-bold text-neutral-700">Your Message</label>
-                <textarea className="w-full border-neutral-300 focus:ring-0 focus:border-neutral-900 border-b-2 border-b-neutral-200 focus:border-b-[#F4C430] transition-all py-3 resize-none" placeholder="Tell us about your requirements..." rows={5}></textarea>
-              </div>
-              <div className="pt-md">
-                <button className="w-full md:w-auto px-12 py-4 bg-neutral-900 text-[#F4C430] font-h3 hover:bg-neutral-800 transition-colors rounded-lg flex items-center justify-center gap-md" type="submit">
-                  Send Inquiry
-                  <span className="material-symbols-outlined">send</span>
-                </button>
-              </div>
-            </form>
-          </div>
 
-          {/* Subtle Info Cards */}
-          <div className="mt-lg grid grid-cols-1 md:grid-cols-2 gap-gutter">
-            <div className="p-md bg-white/50 border border-neutral-200 rounded-xl">
-              <span className="material-symbols-outlined text-[#F4C430] mb-sm">verified</span>
-              <p className="font-label-bold text-neutral-900">Ministry Authorized</p>
-              <p className="text-neutral-500">Official Hajj &amp; Umrah Licensee since 2022.</p>
-            </div>
-            <div className="p-md bg-white/50 border border-neutral-200 rounded-xl">
-              <span className="material-symbols-outlined text-[#F4C430] mb-sm">support_agent</span>
-              <p className="font-label-bold text-neutral-900">24/7 Ground Support</p>
-              <p className="text-neutral-500">Round-the-clock assistance during your pilgrimage.</p>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-neutral-400 uppercase tracking-widest px-1">Message</label>
+                  <textarea className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none resize-none" placeholder="How can we help you?" rows={5}></textarea>
+                </div>
+
+                <button className="w-full bg-[#1A1305] text-[#C9A54C] py-5 rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-[#C9A54C] hover:text-white transition-all flex items-center justify-center gap-4 shadow-xl" type="submit">
+                  Send Your Inquiry
+                  <Send className="w-4 h-4" />
+                </button>
+              </form>
+            </motion.div>
+
+            {/* Support Grid */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+              {[
+                { title: 'Trusted Management', desc: 'Managed by J. Dasthagir Basha with years of expertise.' },
+                { title: '24/7 Assistance', desc: 'Round-the-clock support for all your needs during the journey.' }
+              ].map((item, i) => (
+                <div key={i} className="p-8 bg-white/50 border border-neutral-100 rounded-[2rem] flex items-start gap-4">
+                  <CheckCircle2 className="text-[#C9A54C] w-6 h-6 shrink-0" />
+                  <div>
+                    <p className="font-bold text-[#1A1305] mb-1">{item.title}</p>
+                    <p className="text-xs text-neutral-500 leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

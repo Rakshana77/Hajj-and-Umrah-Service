@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, CheckCircle2, Star } from 'lucide-react';
-import { packages } from '../data/packages';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  CheckCircle2, 
+  Star, 
+  Filter, 
+  ArrowUpDown, 
+  Loader2, 
+  MessageCircle, 
+  Plane, 
+  ExternalLink 
+} from 'lucide-react';
+import { getPackages } from '../services/dataService';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -12,10 +23,63 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const PackageSection: React.FC = () => {
+  const [allPackages, setAllPackages] = useState<any[]>([]);
+  const [filteredPackages, setFilteredPackages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('All');
+  const [sortBy, setSortBy] = useState('newest');
+
+  useEffect(() => {
+    const fetchPkgs = async () => {
+      try {
+        const data = await getPackages();
+        setAllPackages(data);
+        setFilteredPackages(data);
+      } catch (err) {
+        console.error("Error fetching packages:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPkgs();
+  }, []);
+
+  const defaultPackages = [
+    {
+      id: 'economy-umrah',
+      title: 'Economy Umrah Package',
+      price: '₹88,000',
+      category: 'Economy',
+      description: 'Affordable package with essential services for pilgrims seeking a spiritual journey on a budget.',
+      includes: ['Direct Flight', '3-Star Hotel', 'Visa Processing', 'Indian Food', 'Transport'],
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAMakWnZcUsB2wqjn7Z8TuOLcYLA9wuWre215J1hwiXDgrBFYhESC_2sdnMLb0tF9KXaJUMhHWCQ0RoLcIbji3elBGlyTH_5K9GIl042hHmx4XetuEjzUfVb1eaAkRinG5sSuFSU-RC_q67RHalPyHRauW3Jlg1Wc1Hjpz9vLCEnGK1gPAWHuFEefxPS39p4v42gkMJG5H-d_UScJpwF0lNS2IIWHx4ifdJCDuknaTw_ikSlM5LMNdTbN3UHM3r7fQ9wHLTOl_WTvs'
+    },
+    {
+      id: 'deluxe-umrah',
+      title: 'Deluxe Umrah Package',
+      price: '₹1,05,000',
+      category: 'Deluxe',
+      description: 'Comfortable stay with upgraded facilities and closer proximity to the Harams.',
+      includes: ['Premium Flight', '4-Star Hotel', 'Luxury Transport', 'Gourmet Indian Meals', 'Ziyarat included'],
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCf6Qc_zCiI6TJ375gCkSZh4sGYrPPiDe6VYf94i5Edqpr9NC7oJdX1-xaa196kWznKrUp-9sYGF5w7Uhdzw_jLE_GERpzaIIp1j6n3lhEC0MCd98_9HyqZDvzFjSrZy_9meFLbiRID7JJurkYW-crAZeN52Vmljy61r1M558CBpkiXOqVATrcIQ90BvswNS8BTTARS54tOjnwMSRF7wNDmDLMtsln7IvsGGv3AZhjbUeU71xUzVXDjCG-yWwwfl023TvIQdww5OIY'
+    },
+    {
+      id: 'premium-umrah',
+      title: '3 Umrah + Ziyara Premium Package',
+      price: '₹1,20,000',
+      category: 'Premium',
+      description: 'Premium experience with multiple Umrah opportunities and comprehensive guided Ziyara.',
+      includes: ['Business Class Option', '5-Star Hotel', 'VIP Service', 'Full Spiritual Guide', 'Exclusive Ziyarat'],
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEw4gl2Oc7NH1wSl-cpeWOpt7BFun8a44Nyh26hB7QsjlSTUEJFG5EzIeHzi42InBu0zMJ_rlAC5jk2PZkeXM0uKiOr5-TbSBP1tYDZmQqIpzq0TxZWiID6UTliYXVaTGORQzMoFmDZrXoj2pm3k3x01D0O55Cg7tdqWIdTaooTzT5PgB3z8h3CRsexc0o7xw2-RmvCfmLzwvHeOSc4rUpud_Wr-UKaERbyGOrc7dxzUE-lSnIg6Zx7iVScYMpW5MP6KAEmsewSKc'
+    }
+  ];
+
+  const packagesToDisplay = filteredPackages.length > 0 ? filteredPackages : defaultPackages;
+
   return (
-    <section className="py-16 sm:py-24 bg-neutral-50 relative overflow-hidden">
+    <section className="py-16 sm:py-24 bg-[#FCFBF7] relative overflow-hidden">
       {/* Subtle Islamic Pattern Background */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]" />
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
         <motion.div 
@@ -23,144 +87,101 @@ const PackageSection: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12 sm:mb-16"
+          className="text-center mb-12 sm:mb-20"
         >
-          <span className="text-[#F4C430] font-bold tracking-widest uppercase text-[9px] sm:text-[10px] mb-3 block">Select Your Spiritual Journey</span>
-          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 mb-4 tracking-tight leading-tight px-2">
-            Our Premium <span className="text-[#F4C430]">Hajj & Umrah</span> Packages
+          <span className="text-[#C9A54C] font-bold tracking-[0.2em] uppercase text-[10px] mb-4 block">தமிழகத்தில் நம்பிக்கையான நிர்வாகம்</span>
+          <h2 className="font-display text-3xl sm:text-5xl font-bold text-[#1A1305] mb-6 tracking-tight leading-tight">
+            Our <span className="text-[#C9A54C]">Spiritual Journey</span> Packages
           </h2>
-          <p className="text-neutral-600 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed px-4">
-            Choose from our carefully curated journeys designed to provide you with a fulfilling and comfortable pilgrimage experience.
-          </p>
-          <motion.div 
-            initial={{ width: 0 }}
-            whileInView={{ width: 60 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="h-1 bg-[#F4C430] mx-auto mt-6 rounded-full sm:hidden"
-          />
-          <motion.div 
-            initial={{ width: 0 }}
-            whileInView={{ width: 96 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="h-1.5 bg-[#F4C430] mx-auto mt-8 rounded-full hidden sm:block"
-          />
+          <p className="text-neutral-500 max-w-2xl mx-auto italic text-lg">"Providing the best spiritual experience for pilgrims under the guidance of Haji Dasthagir Basha."</p>
         </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="relative group"
-        >
-          <Swiper
-            modules={[Navigation, Pagination, Autoplay]}
-            spaceBetween={30}
-            slidesPerView={1}
-            navigation={{
-              prevEl: '.swiper-button-prev-custom',
-              nextEl: '.swiper-button-next-custom',
-            }}
-            pagination={{ clickable: true, dynamicBullets: true }}
-            autoplay={{ delay: 5000, disableOnInteraction: false }}
-            breakpoints={{
-              640: { slidesPerView: 2 },
-              1024: { slidesPerView: 3 },
-            }}
-            className="pb-16"
-          >
-            {packages.map((pkg, index) => (
-              <SwiperSlide key={pkg.id}>
-                <motion.div 
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white rounded-3xl overflow-hidden border border-neutral-100 shadow-sm hover:shadow-2xl transition-all duration-500 group/card h-full flex flex-col hover:-translate-y-3"
-                >
-                  {/* Card Image */}
-                  <div className="relative h-48 sm:h-72 overflow-hidden">
-                    <img
-                      src={pkg.image}
-                      alt={pkg.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover/card:opacity-90 transition-opacity duration-500" />
-                    
-                    <div className="absolute top-4 left-4 flex flex-col gap-2">
-                      {pkg.popular && (
-                        <div className="bg-[#F4C430] text-black px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-xl">
-                          <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-black" />
-                          Most Popular
-                        </div>
-                      )}
-                      {pkg.limitedSeats && (
-                        <div className="bg-red-600 text-white px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-widest shadow-xl animate-pulse">
-                          Only {pkg.seatsLeft} Seats Left
-                        </div>
-                      )}
+        {loading && allPackages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="text-[#C9A54C] animate-spin mb-4" size={40} />
+            <p className="text-neutral-500 font-medium">Preparing your spiritual journey...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
+            {packagesToDisplay.map((pkg, index) => (
+              <motion.div 
+                key={pkg.id || index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white rounded-[2rem] overflow-hidden border border-neutral-100 shadow-xl hover:shadow-2xl transition-all duration-500 group h-full flex flex-col hover:-translate-y-4"
+              >
+                {/* Card Image */}
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={pkg.image}
+                    alt={pkg.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  
+                  <div className="absolute top-6 left-6 flex flex-col gap-2">
+                    <div className="bg-white/90 backdrop-blur shadow-xl text-[#C9A54C] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                      <Plane className="w-3 h-3" />
+                      {pkg.journeyType || 'Umrah'}
+                    </div>
+                    <div className="bg-[#1A1305]/90 backdrop-blur shadow-xl text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                      <Star className="w-3 h-3 fill-[#C9A54C] text-[#C9A54C]" />
+                      {pkg.serviceClass || 'Premium'}
                     </div>
                   </div>
 
-                  {/* Card Content */}
-                  <div className="p-5 sm:p-8 flex flex-col flex-grow">
-                    <div className="mb-4 sm:mb-6">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-[9px] sm:text-[10px] font-black text-[#F4C430] uppercase tracking-[0.2em]">
-                          {pkg.type}
-                        </span>
-                        <span className="w-1 h-1 bg-neutral-300 rounded-full" />
-                        <span className="text-[9px] sm:text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em]">
-                          {pkg.category}
-                        </span>
-                      </div>
-                      <h3 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-2 sm:mb-3 group-hover/card:text-[#F4C430] transition-colors">{pkg.name}</h3>
-                      <p className="text-neutral-500 text-xs sm:text-sm leading-relaxed line-clamp-2">{pkg.shortDescription}</p>
+                  <div className="absolute bottom-6 left-6">
+                     <span className="bg-[#C9A54C] text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-2xl">
+                        {pkg.proximity || '0-200m'}
+                     </span>
+                  </div>
+                </div>
+
+                {/* Card Content */}
+                <div className="p-10 flex flex-col flex-grow">
+                  <div className="flex-grow">
+                    <h3 className="text-2xl font-black text-[#1A1305] mb-4 leading-tight group-hover:text-[#C9A54C] transition-colors">{pkg.title}</h3>
+                    
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="flex flex-col">
+                            <span className="text-3xl font-black text-[#1A1305] tracking-tighter">{pkg.price}</span>
+                            <span className="text-neutral-400 text-[10px] font-black uppercase tracking-widest">Starting from</span>
+                        </div>
+                        <div className="h-10 w-[1px] bg-neutral-100" />
+                        <div className="flex flex-col">
+                            <span className="text-xl font-black text-neutral-900">{pkg.duration || '15'} Days</span>
+                            <span className="text-neutral-400 text-[10px] font-black uppercase tracking-widest">Duration</span>
+                        </div>
                     </div>
+                    
+                    <p className="text-neutral-500 text-sm leading-relaxed mb-8 line-clamp-3 italic">"{pkg.description}"</p>
+                  </div>
 
-                    <div className="mb-6 sm:mb-8 p-4 bg-neutral-50 rounded-2xl">
-                      <div className="text-[10px] sm:text-sm text-neutral-400 mb-1">Starting from</div>
-                      <div className="text-2xl sm:text-3xl font-black text-neutral-900">
-                        ₹{pkg.price.toLocaleString()}
-                        <span className="text-xs sm:text-sm font-normal text-neutral-400"> / person</span>
-                      </div>
-                    </div>
-
-                    <ul className="space-y-3 sm:space-y-4 mb-8 sm:mb-10 flex-grow">
-                      {pkg.features.slice(0, 4).map((feature, idx) => (
-                        <li key={idx} className="flex items-center gap-3 text-xs sm:text-sm text-neutral-600 font-medium">
-                          <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#F4C430]/10 flex items-center justify-center shrink-0">
-                            <CheckCircle2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#F4C430]" />
-                          </div>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-
+                  <div className="flex flex-col gap-4">
                     <Link
                       to={`/packages/${pkg.id}`}
-                      className="w-full bg-neutral-900 text-white py-3 rounded-xl font-black text-[10px] sm:text-[11px] uppercase tracking-widest transition-all hover:bg-[#F4C430] hover:text-neutral-900 flex items-center justify-center gap-2 group/btn shadow-lg"
+                      className="w-full bg-[#1A1305] text-white py-5 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all hover:bg-[#C9A54C] hover:scale-[1.02] flex items-center justify-center gap-3 shadow-xl"
                     >
-                      View Journey Details
-                      <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />
+                      <ExternalLink className="w-4 h-4" />
+                      View Itinerary
                     </Link>
+                    <a
+                      href={`https://wa.me/918123379158?text=Interested in ${pkg.title}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full border-2 border-neutral-200 text-[#1A1305] py-5 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all hover:border-[#25D366] hover:bg-[#25D366] hover:text-white flex items-center justify-center gap-3"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      WhatsApp Booking
+                    </a>
                   </div>
-                </motion.div>
-              </SwiperSlide>
+                </div>
+              </motion.div>
             ))}
-          </Swiper>
-
-          {/* Custom Navigation Buttons */}
-          <button className="swiper-button-prev-custom absolute left-[-25px] top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-neutral-900 hover:bg-[#F4C430] transition-all disabled:opacity-0 hidden lg:flex">
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <button className="swiper-button-next-custom absolute right-[-25px] top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-neutral-900 hover:bg-[#F4C430] transition-all disabled:opacity-0 hidden lg:flex">
-            <ChevronRight className="w-6 h-6" />
-          </button>
-        </motion.div>
+          </div>
+        )}
       </div>
     </section>
   );

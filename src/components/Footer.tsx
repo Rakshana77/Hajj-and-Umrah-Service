@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Camera, Globe, Video } from 'lucide-react';
+import { Phone, Mail, MapPin, Camera, Globe, Video, MessageCircle } from 'lucide-react';
 import logo from '../assets/logo/Gemini_Generated_Image_6kua1k6kua1k6kua.png';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-neutral-900 text-white pt-24 pb-12 overflow-hidden relative">
+    <footer className="w-full bg-[#1A1305] text-white pt-24 pb-12 overflow-hidden relative">
       {/* Decorative Pattern Overlay */}
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]" />
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]" />
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-16 mb-20">
@@ -20,23 +20,24 @@ const Footer: React.FC = () => {
                 transition={{ duration: 1 }}
                 src={logo} 
                 alt="HAJI UMRAH" 
-                className="h-24 w-24 object-cover rounded-full border-2 border-[#F4C430] shadow-2xl" 
+                className="h-24 w-24 object-cover rounded-full border-2 border-[#C9A54C] shadow-2xl" 
                 loading="lazy" 
               />
               <div>
                 <h2 className="text-3xl font-black tracking-tighter text-white">HAJI UMRAH</h2>
-                <p className="text-sm font-bold text-[#F4C430] tracking-[0.3em] uppercase">&amp; ZIYARA SERVICE</p>
+                <p className="text-sm font-bold text-[#C9A54C] tracking-[0.2em] uppercase">&amp; ZIYARA SERVICE</p>
+                <p className="text-[12px] font-bold text-[#C9A54C] mt-1">தமிழகத்தில் நம்பிக்கையான நிர்வாகம்</p>
               </div>
             </div>
-            <p className="text-neutral-400 text-lg leading-relaxed mb-10 max-w-md">
-              Providing spiritual excellence and comfort for your sacred journey since 2012. Trusted by thousands of pilgrims across India.
+            <p className="text-neutral-400 text-lg leading-relaxed mb-10 max-w-md italic">
+              "Providing spiritual excellence and comfort for your sacred journey under the expert guidance of J. Dasthagir Basha."
             </p>
             <div className="flex gap-6">
-              {[Camera, Globe, Video].map((Icon, i) => (
+              {[Camera, Globe, Video, MessageCircle].map((Icon, i) => (
                 <motion.a 
                   key={i}
                   href="#"
-                  whileHover={{ y: -5, color: '#F4C430' }}
+                  whileHover={{ y: -5, color: '#C9A54C' }}
                   className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center transition-colors border border-white/10"
                 >
                   <Icon className="w-5 h-5" />
@@ -59,9 +60,9 @@ const Footer: React.FC = () => {
                 <li key={link.name}>
                   <Link 
                     to={link.path}
-                    className="text-neutral-400 hover:text-[#F4C430] transition-colors font-medium flex items-center gap-2 group"
+                    className="text-neutral-400 hover:text-[#C9A54C] transition-colors font-medium flex items-center gap-2 group"
                   >
-                    <span className="w-0 h-[1px] bg-[#F4C430] transition-all group-hover:w-4" />
+                    <span className="w-0 h-[1px] bg-[#C9A54C] transition-all group-hover:w-4" />
                     {link.name}
                   </Link>
                 </li>
@@ -73,31 +74,36 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-bold mb-8 text-white uppercase tracking-widest text-xs">Get In Touch</h4>
             <div className="space-y-6">
-              <a href="tel:08048102586" className="flex items-start gap-4 group">
-                <div className="w-10 h-10 rounded-lg bg-[#F4C430]/10 flex items-center justify-center shrink-0 group-hover:bg-[#F4C430] transition-colors">
-                  <Phone className="w-4 h-4 text-[#F4C430] group-hover:text-neutral-900" />
-                </div>
-                <div>
-                  <p className="text-xs text-neutral-500 uppercase font-black mb-1">Call Us</p>
-                  <p className="text-sm font-bold text-white group-hover:text-[#F4C430] transition-colors">08048102586</p>
-                </div>
-              </a>
-              <a href="mailto:arshumrah2022@gmail.com" className="flex items-start gap-4 group">
-                <div className="w-10 h-10 rounded-lg bg-[#F4C430]/10 flex items-center justify-center shrink-0 group-hover:bg-[#F4C430] transition-colors">
-                  <Mail className="w-4 h-4 text-[#F4C430] group-hover:text-neutral-900" />
-                </div>
-                <div>
-                  <p className="text-xs text-neutral-500 uppercase font-black mb-1">Email Us</p>
-                  <p className="text-sm font-bold text-white group-hover:text-[#F4C430] transition-colors uppercase">arshumrah2022@gmail.com</p>
-                </div>
-              </a>
               <div className="flex items-start gap-4 group">
-                <div className="w-10 h-10 rounded-lg bg-[#F4C430]/10 flex items-center justify-center shrink-0">
-                  <MapPin className="w-4 h-4 text-[#F4C430]" />
+                <div className="w-10 h-10 rounded-lg bg-[#C9A54C]/10 flex items-center justify-center shrink-0">
+                  <Phone className="w-4 h-4 text-[#C9A54C]" />
+                </div>
+                <div>
+                  <p className="text-xs text-neutral-500 uppercase font-black mb-1">Call Support</p>
+                  <p className="text-sm font-bold text-white">08123379158</p>
+                  <p className="text-sm font-bold text-white">88071 14887</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4 group">
+                <div className="w-10 h-10 rounded-lg bg-[#C9A54C]/10 flex items-center justify-center shrink-0">
+                  <MapPin className="w-4 h-4 text-[#C9A54C]" />
                 </div>
                 <div>
                   <p className="text-xs text-neutral-500 uppercase font-black mb-1">Our Location</p>
-                  <p className="text-sm font-bold text-white">Chennai, Tamil Nadu, India</p>
+                  <p className="text-sm font-bold text-white leading-relaxed">
+                    No. 16, Ajmal Complex, E.C.R Road,<br/>
+                    (Roundana Opp), Kottakuppam,<br/>
+                    Puducherry
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4 group">
+                <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
+                  <MessageCircle className="w-4 h-4 text-green-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-neutral-500 uppercase font-black mb-1">WhatsApp</p>
+                  <p className="text-sm font-bold text-white">0541554916 (Saudi)</p>
                 </div>
               </div>
             </div>
@@ -106,7 +112,7 @@ const Footer: React.FC = () => {
 
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-neutral-500 text-xs font-medium">
-            © 2026 Haji Umrah & Ziyara service. All Rights Reserved.
+            © 2026 Haji Umrah & Ziyara Service. Admin: J. Dasthagir Basha. All Rights Reserved.
           </p>
           <div className="flex gap-8">
             <a href="#" className="text-neutral-500 hover:text-white text-[10px] uppercase font-black tracking-widest">Privacy Policy</a>

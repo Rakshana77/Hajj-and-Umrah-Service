@@ -49,7 +49,7 @@ const About: React.FC = () => {
         <div className="max-w-7xl mx-auto px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-lg">
             {/* Our Story Card */}
-            <div className="lg:col-span-7 bg-white p-lg rounded-xl border-t-4 border-[#F4C430] soft-veil-shadow">
+            <div className="lg:col-span-7 bg-white p-lg rounded-xl border-t-4 border-[#C9A54C] soft-veil-shadow">
               <div className="flex items-center gap-sm mb-md">
                 <span className="material-symbols-outlined text-secondary">auto_stories</span>
                 <h2 className="font-h2 text-h2 text-on-surface uppercase tracking-wider">Our Story</h2>
@@ -62,16 +62,16 @@ const About: React.FC = () => {
               </p>
             </div>
             {/* Our Mission Card */}
-            <div className="lg:col-span-5 bg-inverse-surface p-lg rounded-xl text-white flex flex-col justify-center">
+            <div className="lg:col-span-5 bg-[#1A1305] p-lg rounded-xl text-white flex flex-col justify-center">
               <div className="flex items-center gap-sm mb-md">
-                <span className="material-symbols-outlined text-secondary-fixed text-[#F4C430]">center_focus_strong</span>
-                <h2 className="font-h2 text-h2 uppercase tracking-wider">Our Mission</h2>
+                <span className="material-symbols-outlined text-secondary-fixed text-[#C9A54C]">center_focus_strong</span>
+                <h2 className="font-h2 text-h2 uppercase tracking-wider text-white">Our Mission</h2>
               </div>
               <p className="font-body-lg text-body-lg text-surface-variant leading-relaxed">
                 "To provide a seamless, comfortable, and spiritually fulfilling journey for every pilgrim, bridging the gap between worldly logistics and heavenly aspirations."
               </p>
-              <div className="mt-lg border-l-4 border-[#F4C430] pl-md py-sm">
-                <p className="font-label-bold text-secondary-fixed italic text-[#F4C430]">Precision. Comfort. Devotion.</p>
+              <div className="mt-lg border-l-4 border-[#C9A54C] pl-md py-sm">
+                <p className="font-label-bold text-secondary-fixed italic text-[#C9A54C]">Precision. Comfort. Devotion.</p>
               </div>
             </div>
           </div>
@@ -95,13 +95,13 @@ const About: React.FC = () => {
               </div>
             </div>
             {/* Feature 2 */}
-            <div className="bg-white p-lg rounded-xl border-t-4 border-[#F4C430] soft-veil-shadow flex flex-col justify-center">
+            <div className="bg-white p-lg rounded-xl border-t-4 border-[#C9A54C] soft-veil-shadow flex flex-col justify-center">
               <span className="material-symbols-outlined text-secondary text-4xl mb-sm">assignment_ind</span>
               <h3 className="font-h3 text-h3 text-on-surface mb-sm">Dedicated Group Leaders</h3>
               <p className="text-on-surface-variant font-body-md">Fluent in multiple languages and trained in emergency protocols to provide 24/7 support throughout your stay.</p>
             </div>
             {/* Feature 3 */}
-            <div className="bg-white p-lg rounded-xl border-t-4 border-[#F4C430] soft-veil-shadow flex flex-col justify-center">
+            <div className="bg-white p-lg rounded-xl border-t-4 border-[#C9A54C] soft-veil-shadow flex flex-col justify-center">
               <span className="material-symbols-outlined text-secondary text-4xl mb-sm">handshake</span>
               <h3 className="font-h3 text-h3 text-on-surface mb-sm">Vendor Relationships</h3>
               <p className="text-on-surface-variant font-body-md">Exclusive partnerships with top-tier hotels and transport services ensure premium placement near the Harams.</p>
@@ -120,19 +120,19 @@ const About: React.FC = () => {
 
       {/* CTA Section */}
       <section className="py-xl">
-        <div className="max-w-5xl mx-auto px-8 bg-[#F4C430] rounded-xl p-xl soft-veil-shadow text-center relative overflow-hidden">
+        <div className="max-w-5xl mx-auto px-8 bg-[#C9A54C] rounded-xl p-xl soft-veil-shadow text-center relative overflow-hidden">
           <div className="relative z-10">
-            <h2 className="font-h1 text-h1 text-neutral-900 mb-md">Ready for your spiritual journey?</h2>
-            <p className="font-body-lg text-neutral-800 mb-lg max-w-xl mx-auto">Let our 15 years of experience guide you to a path of peace and devotion.</p>
+            <h2 className="font-h1 text-h1 text-[#1A1305] mb-md">Ready for your spiritual journey?</h2>
+            <p className="font-body-lg text-[#1A1305] mb-lg max-w-xl mx-auto italic">"Providing trusted Hajj & Umrah services under the leadership of J. Dasthagir Basha."</p>
             <div className="flex flex-col md:flex-row gap-md justify-center">
               <button 
-                className="bg-neutral-900 text-white px-lg py-sm font-label-bold rounded-lg hover:bg-neutral-800 transition-colors uppercase tracking-widest shadow-lg"
+                className="bg-[#1A1305] text-white px-lg py-sm font-label-bold rounded-lg hover:bg-neutral-800 transition-colors uppercase tracking-widest shadow-lg"
                 onClick={() => navigate('/contact')}
               >
                 Inquire Now
               </button>
               <button 
-                className="bg-white text-neutral-900 px-lg py-sm font-label-bold rounded-lg hover:bg-neutral-50 transition-colors uppercase tracking-widest shadow-md"
+                className="bg-white text-[#1A1305] px-lg py-sm font-label-bold rounded-lg hover:bg-neutral-50 transition-colors uppercase tracking-widest shadow-md"
                 onClick={() => navigate('/packages')}
               >
                 View Packages

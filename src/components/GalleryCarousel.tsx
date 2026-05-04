@@ -50,14 +50,14 @@ const GalleryCarousel: React.FC = () => {
           className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8"
         >
           <div className="space-y-6">
-            <div className="flex items-center gap-3 text-[#F4C430]">
-              <div className="w-10 h-10 rounded-xl bg-[#F4C430]/10 flex items-center justify-center">
+            <div className="flex items-center gap-3 text-[#C9A54C]">
+              <div className="w-10 h-10 rounded-xl bg-[#C9A54C]/10 flex items-center justify-center">
                 <Camera className="w-5 h-5" />
               </div>
               <span className="font-black text-[10px] uppercase tracking-[0.3em]">Our Journey Gallery</span>
             </div>
             <h2 className="font-display text-4xl md:text-5xl font-bold text-neutral-900 tracking-tight">
-              Moments from <span className="text-[#F4C430]">Our Pilgrims</span>
+              Moments from <span className="text-[#C9A54C]">Our Pilgrims</span>
             </h2>
             <p className="text-neutral-500 max-w-xl text-lg leading-relaxed italic">
               "Witness the spiritual transition of our blessed pilgrims through real experiences."
@@ -66,7 +66,7 @@ const GalleryCarousel: React.FC = () => {
           
           <Link 
             to="/reviews" 
-            className="flex items-center gap-4 bg-neutral-900 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl hover:bg-[#F4C430] hover:text-neutral-900 transition-all"
+            className="flex items-center gap-4 bg-neutral-900 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl hover:bg-[#C9A54C] hover:text-neutral-900 transition-all"
           >
             <Camera className="w-5 h-5" />
             <span>See Reviews & Photos</span>
@@ -131,10 +131,10 @@ const GalleryCarousel: React.FC = () => {
           </Swiper>
 
           {/* Navigation Buttons */}
-          <button className="gallery-prev absolute left-[-25px] top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-neutral-900 hover:bg-[#F4C430] transition-all opacity-0 group-hover:opacity-100 disabled:hidden hidden lg:flex">
+          <button className="gallery-prev absolute left-[-25px] top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-neutral-900 hover:bg-[#C9A54C] transition-all opacity-0 group-hover:opacity-100 disabled:hidden hidden lg:flex">
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <button className="gallery-next absolute right-[-25px] top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-neutral-900 hover:bg-[#F4C430] transition-all opacity-0 group-hover:opacity-100 disabled:hidden hidden lg:flex">
+          <button className="gallery-next absolute right-[-25px] top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-neutral-900 hover:bg-[#C9A54C] transition-all opacity-0 group-hover:opacity-100 disabled:hidden hidden lg:flex">
             <ChevronRight className="w-6 h-6" />
           </button>
         </motion.div>
