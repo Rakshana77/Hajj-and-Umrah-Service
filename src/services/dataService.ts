@@ -68,3 +68,14 @@ export const deleteReview = async (id: string) => {
 export const updateReview = async (id: string, review: any) => {
   return await updateDoc(doc(db, "reviews", id), review);
 };
+
+// --- Hero Service ---
+export const getHeroData = async () => {
+  const querySnapshot = await getDocs(collection(db, "hero"));
+  if (querySnapshot.empty) return null;
+  return { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+};
+
+export const updateHeroData = async (id: string, data: any) => {
+  return await updateDoc(doc(db, "hero", id), data);
+};
