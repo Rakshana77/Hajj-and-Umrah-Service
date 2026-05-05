@@ -1,97 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  getHeroData, 
-  updateHeroData, 
-  getPackages, 
-  addPackage, 
-  updatePackage, 
-  deletePackage,
-  getReviews,
-  addReview,
-  updateReview,
-  deleteReview,
-  uploadImage 
-} from '../services/dataService';
-import { 
+  Users, 
+  Package, 
+  Star, 
+  Settings, 
   Plus, 
   Trash2, 
   Edit, 
-  Save, 
   X, 
-  Image as ImageIcon, 
-  Layout, 
-  Package as PackageIcon, 
-  LogOut,
-  Upload,
-  Loader2,
+  Save, 
+  Upload, 
+  Loader2, 
+  ImageIcon,
   CheckCircle2,
-  Activity,
-  ArrowRight,
-  Star,
-  Plane,
   MapPin,
-  ExternalLink,
-  Search,
-  Filter,
-  Video
+  Plane
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  getPackages, 
+  addPackage, 
+  deletePackage, 
+  updatePackage,
+  getReviews,
+  addReview,
+  deleteReview,
+  updateReview,
+  uploadImage
+} from '../services/dataService';
 
 const Admin: React.FC = () => {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'hero' | 'packages' | 'reviews'>('dashboard');
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ type: '', text: '' });
-
-  // Stats State
-  const [stats, setStats] = useState({
-    totalPackages: 0,
-    heroImagesCount: 0,
-    lastUpdated: '-'
-  });
-
-  // Filters State
-  const [filterType, setFilterType] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Hero State
-  const [heroSlides, setHeroSlides] = useState<any[]>([]);
-  const [heroFiles, setHeroFiles] = useState<{ [key: number]: File }>({});
-
-  // Packages State
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [packages, setPackages] = useState<any[]>([]);
-  const [editingPackage, setEditingPackage] = useState<any>(null);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const [isAddingPackage, setIsAddingPackage] = useState(false);
+  const [isAddingReview, setIsAddingReview] = useState(false);
+  const [editingPackage, setEditingPackage] = useState<any>(null);
+  const [editingReview, setEditingReview] = useState<any>(null);
+
   const [packageForm, setPackageForm] = useState({
     title: '',
     price: '',
-    duration: '',
-    journeyType: 'Umrah',
-    serviceClass: 'Budget',
-    proximity: '0-200m',
+    duration: 15,
     description: '',
-    image: ''
+    image: '',
+    journeyType: 'Umrah',
+    serviceClass: 'Premium',
+    proximity: '0-200m'
   });
-  const [packageFile, setPackageFile] = useState<File | null>(null);
-  
-  // Reviews State
-  const [reviews, setReviews] = useState<any[]>([]);
-  const [editingReview, setEditingReview] = useState<any>(null);
-  const [isAddingReview, setIsAddingReview] = useState(false);
+
   const [reviewForm, setReviewForm] = useState({
     name: '',
     location: '',
-    rating: 5,
-    type: 'video' as 'video' | 'photo',
-    isExternal: false,
     content: '',
+    rating: 5,
+    type: 'video',
+    date: '',
+    isExternal: false,
     mediaUrl: '',
-    thumbnail: '',
-    date: ''
+    thumbnail: ''
   });
+
+  const [packageFile, setPackageFile] = useState<File | null>(null);
   const [reviewFile, setReviewFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -101,150 +72,42 @@ const Admin: React.FC = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const hero = await getHeroData();
-      if (hero && hero.slides) setHeroSlides(hero.slides);
-      
-      const pkgs = await getPackages();
+      const [pkgs, revs] = await Promise.all([getPackages(), getReviews()]);
       setPackages(pkgs);
-      
-      const reviewData = await getReviews();
-      setReviews(reviewData);
-
-      setStats({
-        totalPackages: pkgs.length,
-        heroImagesCount: hero?.slides?.length || 0,
-        lastUpdated: new Date().toLocaleTimeString()
-      });
+      setReviews(revs);
     } catch (err) {
       console.error(err);
-      showMessage('error', 'Sync Failed');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  const showMessage = (type: string, text: string) => {
-    setMessage({ type, text });
-    setTimeout(() => setMessage({ type: '', text: '' }), 4000);
-  };
-
-  // Hero Handlers
-  const addEmptySlide = () => setHeroSlides([...heroSlides, { image: '', title: '', subtitle: '' }]);
-  const removeSlide = (index: number) => {
-    const newSlides = [...heroSlides];
-    newSlides.splice(index, 1);
-    setHeroSlides(newSlides);
-  };
-  const updateSlideField = (index: number, field: string, value: string) => {
-    const newSlides = [...heroSlides];
-    newSlides[index] = { ...newSlides[index], [field]: value };
-    setHeroSlides(newSlides);
-  };
-
-  const handleHeroSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      showMessage('info', 'Syncing Carousel...');
-      const finalSlides = await Promise.all(heroSlides.map(async (slide, index) => {
-        let imageUrl = slide.image;
-        if (heroFiles[index]) imageUrl = await uploadImage(heroFiles[index]);
-        return { ...slide, image: imageUrl };
-      }));
-      await updateHeroData({ slides: finalSlides });
-      setHeroFiles({});
-      showMessage('success', 'Hero Carousel Updated');
-      fetchData();
-    } catch (err) {
-      showMessage('error', 'Hero Update Failed');
-    }
-    setLoading(false);
-  };
-
-  const handleIndividualSlideSave = async (index: number) => {
-    setLoading(true);
-    try {
-      showMessage('info', 'Saving Slide...');
-      const slide = heroSlides[index];
-      let imageUrl = slide.image;
-      if (heroFiles[index]) imageUrl = await uploadImage(heroFiles[index]);
-      
-      const newSlides = [...heroSlides];
-      newSlides[index] = { ...slide, image: imageUrl };
-      
-      await updateHeroData({ slides: newSlides });
-      
-      // Clear the file for this specific index
-      const newFiles = { ...heroFiles };
-      delete newFiles[index];
-      setHeroFiles(newFiles);
-      
-      showMessage('success', 'Slide Saved Successfully');
-      fetchData();
-    } catch (err) {
-      showMessage('error', 'Slide Save Failed');
-    }
-    setLoading(false);
-  };
-
-  // Package Handlers
   const handlePackageSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       let imageUrl = packageForm.image;
-      if (packageFile) imageUrl = await uploadImage(packageFile);
-      const finalData = { ...packageForm, image: imageUrl, duration: parseInt(packageForm.duration.toString()) };
+      if (packageFile) {
+        imageUrl = await uploadImage(packageFile);
+      }
+
       if (editingPackage) {
-        await updatePackage(editingPackage.id, finalData);
-        showMessage('success', 'Journey Modified');
+        await updatePackage(editingPackage.id, { ...packageForm, image: imageUrl });
       } else {
-        await addPackage(finalData);
-        showMessage('success', 'Sacred Journey Created');
+        await addPackage({ ...packageForm, image: imageUrl });
       }
       setIsAddingPackage(false);
-      resetPackageForm();
+      setEditingPackage(null);
+      setPackageForm({ title: '', price: '', duration: 15, description: '', image: '', journeyType: 'Umrah', serviceClass: 'Premium', proximity: '0-200m' });
+      setPackageFile(null);
       fetchData();
     } catch (err) {
-      showMessage('error', 'Save Operation Failed');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  const resetPackageForm = () => {
-    setPackageForm({
-      title: '', price: '', duration: '', journeyType: 'Umrah',
-      serviceClass: 'Budget', proximity: '0-200m', description: '', image: ''
-    });
-    setPackageFile(null);
-    setEditingPackage(null);
-  };
-
-  const startEdit = (pkg: any) => {
-    setEditingPackage(pkg);
-    setPackageForm({ ...pkg });
-    setIsAddingPackage(true);
-  };
-
-  const filteredPackages = packages.filter(pkg => {
-    const matchesSearch = pkg.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = filterType === 'All' || pkg.journeyType === filterType;
-    return matchesSearch && matchesType;
-  });
-
-  const getEmbedUrl = (url: string) => {
-    if (!url) return '';
-    if (url.includes('youtube.com/watch?v=')) {
-      const videoId = url.split('v=')[1]?.split('&')[0];
-      return `https://www.youtube.com/embed/${videoId}`;
-    }
-    if (url.includes('youtu.be/')) {
-      const videoId = url.split('youtu.be/')[1]?.split('?')[0];
-      return `https://www.youtube.com/embed/${videoId}`;
-    }
-    return url;
-  };
-
-  // Review Handlers
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -254,374 +117,255 @@ const Admin: React.FC = () => {
 
       if (reviewFile) {
         mediaUrl = await uploadImage(reviewFile);
-        // If it's a video, generate a thumbnail automatically from Cloudinary
-        if (reviewForm.type === 'video') {
-          // Cloudinary trick: change extension to .jpg to get a frame
-          const baseUrl = mediaUrl.split('?')[0]; // Remove any query params
-          thumbnail = baseUrl.substring(0, baseUrl.lastIndexOf('.')) + '.jpg';
+        if (reviewFile.type.startsWith('video/')) {
+            const cloudinaryBase = mediaUrl.substring(0, mediaUrl.lastIndexOf('.'));
+            thumbnail = `${cloudinaryBase}.jpg`;
+        } else {
+            thumbnail = mediaUrl;
         }
-      } else if (reviewForm.isExternal) {
-        mediaUrl = getEmbedUrl(mediaUrl);
       }
-      
-      const finalData = { ...reviewForm, mediaUrl, thumbnail };
+
       if (editingReview) {
-        await updateReview(editingReview.id, finalData);
-        showMessage('success', 'Review Modified');
+        await updateReview(editingReview.id, { ...reviewForm, mediaUrl, thumbnail });
       } else {
-        await addReview(finalData);
-        showMessage('success', 'New Experience Added');
+        await addReview({ ...reviewForm, mediaUrl, thumbnail });
       }
       setIsAddingReview(false);
-      resetReviewForm();
+      setEditingReview(null);
+      setReviewForm({ name: '', location: '', content: '', rating: 5, type: 'video', date: '', isExternal: false, mediaUrl: '', thumbnail: '' });
+      setReviewFile(null);
       fetchData();
     } catch (err) {
-      showMessage('error', 'Review Save Failed');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  const resetReviewForm = () => {
-    setReviewForm({
-      name: '', location: '', rating: 5, type: 'video',
-      isExternal: false, content: '', mediaUrl: '', thumbnail: '', date: ''
-    });
-    setReviewFile(null);
-    setEditingReview(null);
+  const handleDeletePackage = async (id: string) => {
+    if (window.confirm('Delete this package?')) {
+      await deletePackage(id);
+      fetchData();
+    }
   };
 
-  const startReviewEdit = (review: any) => {
+  const handleDeleteReview = async (id: string) => {
+    if (window.confirm('Delete this review?')) {
+      await deleteReview(id);
+      fetchData();
+    }
+  };
+
+  const handleEditPackage = (pkg: any) => {
+    setEditingPackage(pkg);
+    setPackageForm(pkg);
+    setIsAddingPackage(true);
+  };
+
+  const handleEditReview = (review: any) => {
     setEditingReview(review);
-    setReviewForm({ ...review });
+    setReviewForm({
+      ...review,
+      isExternal: !!review.isExternal,
+      thumbnail: review.thumbnail || ''
+    });
     setIsAddingReview(true);
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] text-[#000] font-sans">
-      {/* Navigation */}
-      <nav className="bg-white border-b border-neutral-200 sticky top-0 z-[100] shadow-sm">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#1A1305] rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shrink-0">
-              <Activity className="text-[#C9A54C]" size={20} />
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-sm sm:text-xl font-black tracking-tight text-[#000] truncate">OFFICIAL <span className="text-[#C9A54C]">ADMIN</span></h1>
-              <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[#C9A54C] truncate">Sacred Portal Authority</p>
+    <div className="min-h-screen bg-neutral-50 pt-24 sm:pt-32 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
+        
+        {/* NAV - STICKY FOR MOBILE */}
+        <div className="bg-white p-4 sm:p-10 rounded-[2rem] sm:rounded-[4rem] shadow-2xl border border-neutral-100 mb-8 sm:mb-16">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 sm:gap-0">
+            <div>
+              <span className="text-[10px] sm:text-[11px] font-black text-[#C9A54C] uppercase tracking-[0.4em] mb-1 sm:mb-2 block">Secure Command Centre</span>
+              <h1 className="text-3xl sm:text-6xl font-black tracking-tighter text-[#1A1305]">Admin Portal</h1>
             </div>
           </div>
-          <button onClick={() => { logout(); navigate('/login'); }} className="bg-red-600 text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-red-700 transition-all shadow-lg whitespace-nowrap">Sign Out</button>
-        </div>
-      </nav>
-
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-8 py-8 sm:py-12">
-        {/* DASHBOARD SUMMARY */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
-          <div className="bg-white p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] border-2 border-neutral-100 shadow-xl relative overflow-hidden group">
-            <div className="absolute right-0 bottom-0 p-4 opacity-5 group-hover:scale-110 transition-transform"><PackageIcon size={100} /></div>
-            <p className="text-[10px] sm:text-[11px] font-black text-[#C9A54C] uppercase tracking-[0.3em] mb-4">Total Inventory</p>
-            <h3 className="text-5xl sm:text-7xl font-black mb-2 text-[#000]">{stats.totalPackages}</h3>
-            <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-widest">Live Offerings</p>
-          </div>
-          <div className="bg-white p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] border-2 border-neutral-100 shadow-xl relative overflow-hidden group">
-            <div className="absolute right-0 bottom-0 p-4 opacity-5 group-hover:scale-110 transition-transform"><ImageIcon size={100} /></div>
-            <p className="text-[10px] sm:text-[11px] font-black text-[#C9A54C] uppercase tracking-[0.3em] mb-4">Gallery Slides</p>
-            <h3 className="text-5xl sm:text-7xl font-black mb-2 text-[#000]">{stats.heroImagesCount}</h3>
-            <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-widest">Active Banners</p>
-          </div>
-          <div className="bg-[#1A1305] p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl relative overflow-hidden">
-            <div className="absolute right-0 bottom-0 p-4 opacity-10"><Activity size={100} className="text-white" /></div>
-            <p className="text-[10px] sm:text-[11px] font-black text-[#C9A54C] uppercase tracking-[0.3em] mb-4">System Status</p>
-            <h3 className="text-2xl sm:text-3xl font-black mb-2 text-white">DATABASE SYNCED</h3>
-            <p className="text-neutral-400 text-[10px] font-bold uppercase tracking-widest">Last Check: {stats.lastUpdated}</p>
-          </div>
-        </section>
-
-        {/* TABS - Mobile Scrollable */}
-        <div className="overflow-x-auto pb-4 no-scrollbar">
-          <div className="flex gap-2 sm:gap-4 bg-white p-2 rounded-2xl sm:rounded-[2rem] w-fit border border-neutral-200 shadow-md whitespace-nowrap">
-            {['dashboard', 'hero', 'packages', 'reviews'].map(tab => (
-              <button key={tab} onClick={() => setActiveTab(tab as any)} className={`px-6 sm:px-10 py-3 sm:py-4 rounded-xl sm:rounded-[1.5rem] text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-[#1A1305] text-[#C9A54C] shadow-xl' : 'text-neutral-400 hover:text-black'}`}>
-                {tab === 'dashboard' ? 'Overview' : tab === 'hero' ? 'Hero Setup' : tab === 'packages' ? 'Packages' : 'Reviews'}
+          
+          <div className="flex gap-2 sm:gap-6 mt-6 sm:mt-12 overflow-x-auto no-scrollbar pb-2">
+            {[
+              { id: 'dashboard', icon: Users, label: 'Stats' },
+              { id: 'hero', icon: ImageIcon, label: 'Hero' },
+              { id: 'packages', icon: Package, label: 'Packages' },
+              { id: 'reviews', icon: Star, label: 'Reviews' },
+              { id: 'settings', icon: Settings, label: 'System' }
+            ].map((tab) => (
+              <button 
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-5 rounded-xl sm:rounded-3xl font-black text-[10px] sm:text-xs uppercase tracking-widest transition-all shrink-0 ${activeTab === tab.id ? 'bg-[#1A1305] text-[#C9A54C] shadow-xl scale-105' : 'bg-neutral-100 text-neutral-400 hover:bg-neutral-200'}`}
+              >
+                <tab.icon size={16} />
+                {tab.label}
               </button>
             ))}
           </div>
         </div>
 
-        <AnimatePresence mode="wait">
-          {activeTab === 'dashboard' && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-              <div className="bg-white border-2 border-neutral-100 rounded-[2rem] sm:rounded-[3rem] overflow-hidden shadow-2xl">
-                <div className="p-6 sm:p-12 border-b border-neutral-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 sm:gap-8 bg-neutral-50/30">
-                  <div className="flex flex-col gap-2 w-full md:w-auto">
-                    <h2 className="text-2xl sm:text-4xl font-black tracking-tighter text-[#000]">Package Management</h2>
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mt-2">
-                        <div className="flex items-center gap-2 bg-white border-2 border-neutral-200 px-4 py-2 rounded-xl shadow-sm">
-                            <Search size={16} className="text-[#C9A54C]" />
-                            <input type="text" placeholder="Search..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="bg-transparent outline-none text-[10px] sm:text-xs font-bold w-full sm:w-48" />
-                        </div>
-                        <div className="flex items-center gap-2 bg-white border-2 border-neutral-200 px-4 py-2 rounded-xl shadow-sm">
-                            <Filter size={16} className="text-[#C9A54C]" />
-                            <select value={filterType} onChange={e => setFilterType(e.target.value)} className="bg-transparent outline-none text-[10px] sm:text-xs font-bold cursor-pointer w-full">
-                                <option value="All">All Types</option>
-                                <option value="Umrah">Umrah</option>
-                                <option value="Hajj">Hajj</option>
-                            </select>
-                        </div>
-                    </div>
-                  </div>
-                  <button onClick={() => { setActiveTab('packages'); setIsAddingPackage(true); resetPackageForm(); }} className="w-full md:w-auto bg-[#C9A54C] text-[#1A1305] font-black px-8 sm:px-12 py-4 sm:py-5 rounded-xl sm:rounded-2xl flex items-center justify-center gap-3 hover:scale-105 transition-all text-[10px] sm:text-xs uppercase tracking-widest shadow-xl">
-                    <Plus size={18} /> New Offering
-                  </button>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left min-w-[800px]">
-                    <thead>
-                      <tr className="bg-neutral-100/50 text-[10px] sm:text-[11px] font-black text-[#000] uppercase tracking-[0.2em] border-b border-neutral-200">
-                        <th className="px-6 sm:px-12 py-4 sm:py-6">SACRED JOURNEY</th>
-                        <th className="px-4 sm:px-8 py-4 sm:py-6">TYPE / CLASS</th>
-                        <th className="px-4 sm:px-8 py-4 sm:py-6">PRICING</th>
-                        <th className="px-4 sm:px-8 py-4 sm:py-6">PROXIMITY</th>
-                        <th className="px-6 sm:px-12 py-4 sm:py-6 text-right">CONTROLS</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {filteredPackages.map(pkg => (
-                        <tr key={pkg.id} className="hover:bg-neutral-50 transition-colors group">
-                          <td className="px-12 py-8">
-                            <div className="flex items-center gap-6">
-                              <img src={pkg.image} className="w-20 h-14 rounded-2xl object-cover shadow-lg border-2 border-white" />
-                              <p className="font-black text-neutral-900 text-lg leading-none">{pkg.title}</p>
-                            </div>
-                          </td>
-                          <td className="px-8 py-8">
-                            <div className="flex flex-col gap-1">
-                                <span className="text-[10px] font-black text-[#C9A54C] uppercase tracking-widest">{pkg.journeyType}</span>
-                                <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">{pkg.serviceClass}</span>
-                            </div>
-                          </td>
-                          <td className="px-8 py-8 font-black text-2xl text-[#000]">
-                            {pkg.price?.toString().startsWith('₹') ? pkg.price : `₹${pkg.price}`}
-                          </td>
-                          <td className="px-8 py-8"><span className="text-[11px] font-black text-neutral-600 bg-neutral-100 px-4 py-2 rounded-xl">{pkg.proximity}</span></td>
-                          <td className="px-12 py-8 text-right">
-                            <div className="flex items-center justify-end gap-3 opacity-30 group-hover:opacity-100 transition-opacity">
-                              <button onClick={() => startEdit(pkg)} className="w-12 h-12 rounded-2xl bg-neutral-100 flex items-center justify-center text-neutral-900 hover:bg-[#C9A54C] transition-all"><Edit size={20} /></button>
-                              <button onClick={() => deletePackage(pkg.id)} className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all"><Trash2 size={20} /></button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+        {activeTab === 'dashboard' && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-10 mb-8 sm:mb-16">
+            {[
+              { label: 'Total Pilgrims', value: '1,240', color: 'bg-blue-50 text-blue-600' },
+              { label: 'Active Packages', value: packages.length, color: 'bg-[#C9A54C]/10 text-[#C9A54C]' },
+              { label: 'Sacred Reviews', value: reviews.length, color: 'bg-green-50 text-green-600' },
+              { label: 'New Inquiries', value: '12', color: 'bg-purple-50 text-purple-600' }
+            ].map((stat, i) => (
+              <div key={i} className="bg-white p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] border border-neutral-100 shadow-xl">
+                <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-neutral-400 mb-2 sm:mb-4">{stat.label}</p>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-3xl sm:text-5xl font-black text-[#1A1305]">{stat.value}</h2>
+                  <div className={`w-10 h-10 sm:w-14 sm:h-14 ${stat.color} rounded-xl sm:rounded-2xl flex items-center justify-center font-bold`}>+</div>
                 </div>
               </div>
-            </motion.div>
-          )}
+            ))}
+          </div>
+        )}
 
-          {activeTab === 'hero' && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-4xl font-black tracking-tighter">Carousel Editor</h2>
-                    <button onClick={addEmptySlide} className="bg-[#1A1305] text-[#C9A54C] px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-xl hover:scale-105 transition-all"><Plus size={18} /> New Slide</button>
+        {activeTab === 'packages' && (
+          <div className="space-y-8 sm:space-y-12">
+            <div className="flex justify-between items-center px-2">
+              <h2 className="text-2xl sm:text-4xl font-black text-[#1A1305]">Package Inventory</h2>
+              <button 
+                onClick={() => { setEditingPackage(null); setPackageForm({ title: '', price: '', duration: 15, description: '', image: '', journeyType: 'Umrah', serviceClass: 'Premium', proximity: '0-200m' }); setIsAddingPackage(true); }}
+                className="bg-[#1A1305] text-[#C9A54C] px-6 sm:px-10 py-3 sm:py-5 rounded-xl sm:rounded-[2rem] font-black text-[10px] sm:text-xs uppercase tracking-widest flex items-center gap-3 shadow-xl hover:scale-105 transition-all"
+              >
+                <Plus size={18} /> Add Package
+              </button>
+            </div>
+            
+            <div className="bg-white rounded-[2rem] sm:rounded-[4rem] shadow-2xl border border-neutral-100 overflow-hidden overflow-x-auto">
+              <table className="w-full min-w-[800px]">
+                <thead className="bg-neutral-50 border-b border-neutral-100">
+                  <tr>
+                    <th className="px-6 sm:px-12 py-6 sm:py-8 text-left text-[10px] sm:text-[11px] font-black uppercase tracking-[0.3em] text-neutral-400">Package Details</th>
+                    <th className="px-6 sm:px-12 py-6 sm:py-8 text-left text-[10px] sm:text-[11px] font-black uppercase tracking-[0.3em] text-neutral-400">Pricing & Info</th>
+                    <th className="px-6 sm:px-12 py-6 sm:py-8 text-right text-[10px] sm:text-[11px] font-black uppercase tracking-[0.3em] text-neutral-400">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-neutral-50">
+                  {packages.map((pkg) => (
+                    <tr key={pkg.id} className="hover:bg-neutral-50/50 transition-colors">
+                      <td className="px-6 sm:px-12 py-6 sm:py-10">
+                        <div className="flex items-center gap-4 sm:gap-8">
+                          <img src={pkg.image} className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl object-cover shadow-lg" alt="" />
+                          <div>
+                            <p className="font-black text-lg sm:text-xl text-[#1A1305] mb-1">{pkg.title}</p>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-[#C9A54C]">{pkg.journeyType} • {pkg.serviceClass}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 sm:px-12 py-6 sm:py-10">
+                        <p className="font-black text-lg sm:text-xl text-[#1A1305] mb-1">{pkg.price}</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400">{pkg.duration} Days • {pkg.proximity}</p>
+                      </td>
+                      <td className="px-6 sm:px-12 py-6 sm:py-10">
+                        <div className="flex justify-end gap-2 sm:gap-4">
+                          <button onClick={() => handleEditPackage(pkg)} className="p-3 sm:p-5 bg-neutral-100 rounded-xl sm:rounded-2xl text-neutral-600 hover:bg-[#1A1305] hover:text-[#C9A54C] transition-all"><Edit size={18} /></button>
+                          <button onClick={() => handleDeletePackage(pkg.id)} className="p-3 sm:p-5 bg-red-50 rounded-xl sm:rounded-2xl text-red-600 hover:bg-red-600 hover:text-white transition-all"><Trash2 size={18} /></button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'reviews' && (
+          <div className="space-y-12">
+            <div className="flex justify-between items-center px-2">
+              <h2 className="text-4xl font-black text-[#1A1305]">Sacred Reviews</h2>
+              <button 
+                onClick={() => { setEditingReview(null); setReviewForm({ name: '', location: '', content: '', rating: 5, type: 'video', date: '', isExternal: false, mediaUrl: '', thumbnail: '' }); setIsAddingReview(true); }}
+                className="bg-[#1A1305] text-[#C9A54C] px-10 py-5 rounded-[2rem] font-black text-xs uppercase tracking-widest flex items-center gap-3 shadow-xl hover:scale-105 transition-all"
+              >
+                <Plus size={18} /> Add Review
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {reviews.map((rev) => (
+                <div key={rev.id} className="bg-white p-10 rounded-[3rem] border border-neutral-100 shadow-xl relative group">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="flex gap-1">
+                      {[...Array(rev.rating)].map((_, i) => <Star key={i} size={14} className="fill-[#C9A54C] text-[#C9A54C]" />)}
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => handleEditReview(rev)} className="p-3 bg-neutral-50 rounded-xl text-neutral-400 hover:text-[#1A1305] transition-all"><Edit size={16} /></button>
+                      <button onClick={() => handleDeleteReview(rev.id)} className="p-3 bg-neutral-50 rounded-xl text-neutral-400 hover:text-red-600 transition-all"><Trash2 size={16} /></button>
+                    </div>
+                  </div>
+                  <p className="text-[#1A1305] font-bold text-lg mb-6 line-clamp-3 italic">"{rev.content}"</p>
+                  <div>
+                    <p className="font-black text-[#1A1305] uppercase tracking-widest text-xs">{rev.name}</p>
+                    <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">{rev.location}</p>
+                  </div>
                 </div>
-                <form onSubmit={handleHeroSubmit} className="space-y-12">
-                    {heroSlides.map((slide, idx) => (
-                        <div key={idx} className="bg-white border-2 border-neutral-100 p-10 rounded-[3rem] shadow-xl flex flex-col lg:flex-row gap-12 relative">
-                            <button type="button" onClick={() => removeSlide(idx)} className="absolute -top-4 -right-4 bg-red-600 text-white w-12 h-12 rounded-2xl shadow-xl flex items-center justify-center"><Trash2 size={20} /></button>
-                            <div className="w-full lg:w-1/3">
-                                <label className="text-[11px] font-black uppercase tracking-widest text-[#000] block mb-4">Slide Visual</label>
-                                <div className="aspect-video bg-neutral-50 rounded-[2.5rem] overflow-hidden relative border-2 border-dashed border-neutral-200 group">
-                                    {heroFiles[idx] ? <div className="absolute inset-0 bg-[#C9A54C]/10 flex items-center justify-center font-black text-[10px] uppercase text-[#C9A54C]">{heroFiles[idx].name}</div> : slide.image ? <img src={slide.image} className="w-full h-full object-cover" /> : <div className="absolute inset-0 flex items-center justify-center text-neutral-200"><ImageIcon size={40} /></div>}
-                                    <label className="absolute inset-0 cursor-pointer opacity-0 group-hover:opacity-100 bg-black/60 flex items-center justify-center transition-opacity"><Upload className="text-white" /><input type="file" className="hidden" onChange={e => setHeroFiles({...heroFiles, [idx]: e.target.files![0]})} /></label>
-                                </div>
-                            </div>
-                            <div className="flex-1 space-y-6">
-                                <div><label className="text-[11px] font-black uppercase tracking-widest text-[#000] block mb-2">Headline</label><input type="text" value={slide.title} onChange={e => updateSlideField(idx, 'title', e.target.value)} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl px-6 py-4 font-black text-xl text-[#000] outline-none focus:border-[#C9A54C]" /></div>
-                                <div><label className="text-[11px] font-black uppercase tracking-widest text-[#000] block mb-2">Subheading</label><textarea value={slide.subtitle} onChange={e => updateSlideField(idx, 'subtitle', e.target.value)} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl px-6 py-4 font-bold text-neutral-600 h-28 outline-none focus:border-[#C9A54C]" /></div>
-                                
-                                <div className="flex gap-4 pt-4">
-                                    <label className="flex-1 bg-[#1A1305] text-white px-4 sm:px-8 py-3 sm:py-4 rounded-xl font-black text-[9px] sm:text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 sm:gap-3 cursor-pointer hover:bg-black transition-all shadow-lg group">
-                                        <Upload size={16} className="group-hover:-translate-y-1 transition-transform" />
-                                        {heroFiles[idx] ? 'Selected' : 'Upload'}
-                                        <input type="file" className="hidden" onChange={e => setHeroFiles({...heroFiles, [idx]: e.target.files![0]})} />
-                                    </label>
-                                    <button 
-                                        type="button" 
-                                        onClick={() => handleIndividualSlideSave(idx)}
-                                        className="flex-1 bg-[#C9A54C] text-[#1A1305] px-4 sm:px-8 py-3 sm:py-4 rounded-xl font-black text-[9px] sm:text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 sm:gap-3 hover:scale-[1.02] transition-all shadow-xl"
-                                    >
-                                        <Save size={16} /> Save
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                    <div className="flex justify-end sticky bottom-6 z-30"><button type="submit" disabled={loading} className="w-full sm:w-auto bg-[#C9A54C] text-[#1A1305] px-8 sm:px-16 py-5 sm:py-6 rounded-2xl sm:rounded-[2.5rem] font-black text-[10px] sm:text-xs uppercase tracking-[0.3em] shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-3 sm:gap-4">{loading ? <Loader2 className="animate-spin" /> : <Save size={20} />} Sync Carousel</button></div>
-                </form>
-            </motion.div>
-          )}
-
-          {activeTab === 'packages' && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-              <div className="flex justify-between items-center">
-                <h2 className="text-4xl font-black tracking-tighter">Sacred Catalog</h2>
-                <button onClick={() => { setIsAddingPackage(true); resetPackageForm(); }} className="bg-[#1A1305] text-[#C9A54C] px-12 py-5 rounded-[2.5rem] font-black text-xs uppercase tracking-widest flex items-center gap-3 shadow-xl hover:scale-105 transition-all"><Plus size={20} /> Launch Offering</button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                {packages.map(pkg => (
-                  <div key={pkg.id} className="bg-white rounded-[3rem] border-2 border-neutral-100 overflow-hidden shadow-xl group hover:shadow-2xl transition-all">
-                    <div className="aspect-[4/3] relative">
-                      <img src={pkg.image} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-6 transition-all">
-                        <button onClick={() => startEdit(pkg)} className="bg-white p-4 rounded-2xl hover:scale-110 transition-all"><Edit /></button>
-                        <button onClick={() => deletePackage(pkg.id)} className="bg-red-600 text-white p-4 rounded-2xl hover:scale-110 transition-all"><Trash2 /></button>
-                      </div>
-                    </div>
-                    <div className="p-10">
-                      <h3 className="text-2xl font-black mb-2">{pkg.title}</h3>
-                      <div className="flex justify-between items-center pt-6 border-t border-neutral-100 mt-6">
-                        <p className="text-3xl font-black text-[#C9A54C]">
-                          {pkg.price?.toString().startsWith('₹') ? pkg.price : `₹${pkg.price}`}
-                        </p>
-                        <p className="text-[10px] font-black uppercase text-neutral-400 tracking-widest">{pkg.journeyType}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {activeTab === 'reviews' && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-              <div className="flex justify-between items-center">
-                <h2 className="text-4xl font-black tracking-tighter">Pilgrim Experiences</h2>
-                <button onClick={() => { setIsAddingReview(true); resetReviewForm(); }} className="bg-[#1A1305] text-[#C9A54C] px-12 py-5 rounded-[2.5rem] font-black text-xs uppercase tracking-widest flex items-center gap-3 shadow-xl hover:scale-105 transition-all"><Plus size={20} /> Add Experience</button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                {reviews.map(review => (
-                  <div key={review.id} className="bg-white rounded-[3rem] border-2 border-neutral-100 overflow-hidden shadow-xl group hover:shadow-2xl transition-all">
-                    <div className="aspect-video relative bg-neutral-900">
-                      {review.type === 'video' ? (
-                        <div className="w-full h-full flex items-center justify-center">
-                            <Video className="text-[#C9A54C]" size={48} />
-                        </div>
-                      ) : (
-                        <img src={review.mediaUrl} className="w-full h-full object-cover" />
-                      )}
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-6 transition-all">
-                        <button onClick={() => startReviewEdit(review)} className="bg-white p-4 rounded-2xl hover:scale-110 transition-all"><Edit /></button>
-                        <button onClick={() => deleteReview(review.id).then(fetchData)} className="bg-red-600 text-white p-4 rounded-2xl hover:scale-110 transition-all"><Trash2 /></button>
-                      </div>
-                    </div>
-                    <div className="p-10">
-                      <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-2xl font-black">{review.name}</h3>
-                        <span className="text-[10px] font-black uppercase bg-[#C9A54C]/10 text-[#C9A54C] px-3 py-1 rounded-full">{review.type}</span>
-                      </div>
-                      <p className="text-neutral-500 text-sm line-clamp-2 italic mb-6">"{review.content}"</p>
-                      <div className="flex justify-between items-center pt-6 border-t border-neutral-100">
-                        <p className="text-xs font-black text-neutral-400 uppercase tracking-widest">{review.location}</p>
-                        <div className="flex gap-1">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={12} className={i < review.rating ? "fill-[#C9A54C] text-[#C9A54C]" : "text-neutral-200"} />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* REVIEW MODAL */}
         <AnimatePresence>
           {isAddingReview && (
             <div className="fixed inset-0 z-[1000] flex items-center justify-center sm:px-4 overflow-y-auto sm:py-10">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsAddingReview(false)} className="fixed inset-0 bg-[#000]/80 backdrop-blur-md" />
-              <motion.div initial={{ opacity: 0, scale: 0.9, y: 50 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 50 }} className="bg-white w-full max-w-6xl sm:rounded-[4rem] relative z-10 shadow-[0_50px_100px_rgba(0,0,0,0.5)] overflow-hidden min-h-screen sm:min-h-0">
+              <motion.div initial={{ opacity: 0, scale: 0.9, y: 50 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 50 }} className="bg-white w-full max-w-4xl sm:rounded-[4rem] relative z-10 shadow-[0_50px_100px_rgba(0,0,0,0.5)] overflow-hidden min-h-screen sm:min-h-0">
                 <div className="p-6 sm:p-12 border-b border-neutral-200 flex justify-between items-center sticky top-0 bg-white z-20">
                   <div>
-                    <span className="text-[10px] sm:text-[11px] font-black text-[#C9A54C] uppercase tracking-[0.4em] mb-1 sm:mb-2 block">Voice of the Pilgrims</span>
-                    <h3 className="text-2xl sm:text-5xl font-black tracking-tighter text-[#000]">{editingReview ? 'Edit Experience' : 'New Experience'}</h3>
+                    <span className="text-[10px] sm:text-[11px] font-black text-[#C9A54C] uppercase tracking-[0.4em] mb-1 sm:mb-2 block">Sacred Testimony</span>
+                    <h3 className="text-2xl sm:text-5xl font-black tracking-tighter text-[#000]">{editingReview ? 'Refine Review' : 'New Testimony'}</h3>
                   </div>
                   <button onClick={() => setIsAddingReview(false)} className="w-10 h-10 sm:w-16 sm:h-16 bg-neutral-100 rounded-xl sm:rounded-[1.5rem] flex items-center justify-center text-neutral-900 hover:bg-[#000] hover:text-white transition-all"><X size={24} /></button>
                 </div>
                 
-                <form onSubmit={handleReviewSubmit} className="p-6 sm:p-12 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-20">
+                <form onSubmit={handleReviewSubmit} className="p-6 sm:p-12 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
                   <div className="space-y-6 sm:space-y-10">
                     <div className="space-y-3 sm:space-y-4">
                       <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000]">Pilgrim Name</label>
-                      <input required type="text" placeholder="e.g. Abdul Rahman" value={reviewForm.name} onChange={e => setReviewForm({...reviewForm, name: e.target.value})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-black text-lg sm:text-xl text-[#000] outline-none focus:border-[#C9A54C]" />
+                      <input required type="text" value={reviewForm.name} onChange={e => setReviewForm({...reviewForm, name: e.target.value})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-black text-md sm:text-lg text-[#000] outline-none focus:border-[#C9A54C]" />
                     </div>
-
+                    <div className="space-y-3 sm:space-y-4">
+                      <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000]">Location</label>
+                      <input required type="text" value={reviewForm.location} onChange={e => setReviewForm({...reviewForm, location: e.target.value})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-black text-md sm:text-lg text-[#000] outline-none focus:border-[#C9A54C]" />
+                    </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10">
                         <div className="space-y-3 sm:space-y-4">
-                            <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000]">Location</label>
-                            <input required type="text" placeholder="e.g. Chennai" value={reviewForm.location} onChange={e => setReviewForm({...reviewForm, location: e.target.value})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-black text-md sm:text-lg text-[#000] outline-none focus:border-[#C9A54C]" />
+                            <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000]">Media Type</label>
+                            <select value={reviewForm.type} onChange={e => setReviewForm({...reviewForm, type: e.target.value})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-black text-md sm:text-lg text-[#000] outline-none focus:border-[#C9A54C]">
+                                <option value="video">Video</option>
+                                <option value="photo">Photo</option>
+                            </select>
                         </div>
                         <div className="space-y-3 sm:space-y-4">
                             <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000]">Rating (1-5)</label>
                             <input required type="number" min="1" max="5" value={reviewForm.rating || ''} onChange={e => setReviewForm({...reviewForm, rating: parseInt(e.target.value) || 0})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-black text-md sm:text-lg text-[#000] outline-none focus:border-[#C9A54C]" />
                         </div>
                     </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10">
-                        <div className="space-y-3 sm:space-y-4">
-                            <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#C9A54C]">Media Type</label>
-                            <select value={reviewForm.type} onChange={e => setReviewForm({...reviewForm, type: e.target.value as any})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-black text-md sm:text-lg text-[#000] outline-none focus:border-[#C9A54C] appearance-none cursor-pointer">
-                                <option value="video">Video Story</option>
-                                <option value="photo">Photo Moment</option>
-                            </select>
-                        </div>
-                        <div className="space-y-3 sm:space-y-4">
-                            <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#C9A54C]">Journey Date</label>
-                            <input type="text" placeholder="e.g. March 2024" value={reviewForm.date} onChange={e => setReviewForm({...reviewForm, date: e.target.value})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-black text-md sm:text-lg text-[#000] outline-none focus:border-[#C9A54C]" />
-                        </div>
-                    </div>
-
-                    <div className="space-y-3 sm:space-y-4">
-                        <div className="flex items-center gap-4 p-4 sm:p-6 bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl">
-                            <input type="checkbox" checked={reviewForm.isExternal} onChange={e => setReviewForm({...reviewForm, isExternal: e.target.checked})} className="w-5 h-5 sm:w-6 sm:h-6 rounded border-neutral-300 text-[#C9A54C] focus:ring-[#C9A54C]" />
-                            <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000]">External Media (YT/IG)</label>
-                        </div>
-                    </div>
                   </div>
 
                   <div className="space-y-6 sm:space-y-10">
                     <div className="space-y-3 sm:space-y-4">
-                      <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000]">The Experience (Content)</label>
-                      <textarea required placeholder="What did the pilgrim say?" value={reviewForm.content} onChange={e => setReviewForm({...reviewForm, content: e.target.value})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 h-32 sm:h-40 font-bold text-neutral-700 outline-none focus:border-[#C9A54C]" />
+                      <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000]">Testimony Details</label>
+                      <textarea required value={reviewForm.content} onChange={e => setReviewForm({...reviewForm, content: e.target.value})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 h-32 sm:h-40 font-bold text-neutral-700 outline-none focus:border-[#C9A54C]" />
                     </div>
 
-                    {reviewForm.isExternal ? (
-                        <div className="space-y-4 sm:space-y-6">
-                            <div>
-                                <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000] mb-2 block">Embed URL</label>
-                                <input type="text" placeholder="https://..." value={reviewForm.mediaUrl} onChange={e => setReviewForm({...reviewForm, mediaUrl: e.target.value})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-bold text-neutral-700 outline-none focus:border-[#C9A54C]" />
-                            </div>
-                            <div>
-                                <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000] mb-2 block">Thumbnail URL</label>
-                                <input type="text" placeholder="Image URL" value={reviewForm.thumbnail} onChange={e => setReviewForm({...reviewForm, thumbnail: e.target.value})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-bold text-neutral-700 outline-none focus:border-[#C9A54C]" />
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000]">Upload Media</label>
-                            <div className="relative rounded-2xl sm:rounded-[3rem] aspect-video bg-neutral-50 border-2 border-dashed border-neutral-200 overflow-hidden group">
-                                {reviewFile ? <div className="absolute inset-0 bg-[#C9A54C]/10 flex flex-col items-center justify-center p-6"><CheckCircle2 size={32} className="text-[#C9A54C] mb-2" /><span className="text-[10px] font-black uppercase text-[#C9A54C] tracking-widest">Ready</span></div> : reviewForm.mediaUrl ? <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 text-neutral-400 italic text-xs">Existing Media</div> : <div className="absolute inset-0 flex flex-col items-center justify-center opacity-20"><ImageIcon size={48} /></div>}
-                                <label className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center cursor-pointer transition-all duration-500"><Upload className="text-white mb-2" size={32} /><span className="text-[10px] font-black text-white uppercase tracking-widest">Select</span><input type="file" className="hidden" onChange={e => setReviewFile(e.target.files![0])} /></label>
-                            </div>
-                        </div>
-                    )}
+                    <div className="space-y-3 sm:space-y-4">
+                      <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000]">Media Upload</label>
+                      <div className="relative rounded-2xl sm:rounded-3xl aspect-video bg-neutral-50 border-2 border-dashed border-neutral-200 overflow-hidden group">
+                        {reviewFile ? <div className="absolute inset-0 bg-[#C9A54C]/10 flex flex-col items-center justify-center p-6"><CheckCircle2 size={32} className="text-[#C9A54C] mb-2" /><span className="text-[10px] font-black uppercase text-[#C9A54C] tracking-widest">Selected</span></div> : reviewForm.thumbnail ? <img src={reviewForm.thumbnail} className="w-full h-full object-cover" /> : <div className="absolute inset-0 flex flex-col items-center justify-center opacity-20"><ImageIcon size={48} /></div>}
+                        <label className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center cursor-pointer transition-all duration-500"><Upload className="text-white mb-2" size={32} /><span className="text-[10px] font-black text-white uppercase tracking-widest">Replace</span><input type="file" className="hidden" onChange={e => setReviewFile(e.target.files![0])} /></label>
+                      </div>
+                    </div>
 
                     <button type="submit" disabled={loading} className="w-full bg-[#1A1305] text-[#C9A54C] font-black py-5 sm:py-8 rounded-2xl sm:rounded-[3rem] shadow-2xl hover:scale-[1.02] transition-all flex items-center justify-center gap-3 sm:gap-4 text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em]">
                       {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
-                      {editingReview ? 'Update' : 'Publish'}
+                      {editingReview ? 'Update Testimony' : 'Save Testimony'}
                     </button>
                   </div>
                 </form>

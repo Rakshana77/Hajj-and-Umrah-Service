@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Camera, Globe, Video, MessageCircle } from 'lucide-react';
+import { Phone, MapPin, Camera, Globe, Video, MessageCircle } from 'lucide-react';
 import logo from '../assets/logo/Gemini_Generated_Image_6kua1k6kua1k6kua.png';
 
 const Footer: React.FC = () => {

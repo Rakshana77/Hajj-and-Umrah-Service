@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { 
-  ChevronLeft, Star, MapPin, Clock, Plane, Hotel, Utensils, 
-  Car, History, Calendar, Phone, CheckCircle2, ShieldCheck, 
-  Info, AlertCircle, Share2, Heart, Loader2, MessageCircle, Building
+  ChevronLeft, Star, MapPin, Clock, Plane, 
+  Phone, CheckCircle2, ShieldCheck, 
+  Info, AlertCircle, Loader2, MessageCircle, Building
 } from 'lucide-react';
 import { getPackages } from '../services/dataService';
 
@@ -13,7 +12,6 @@ const PackageDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const [pkg, setPkg] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [relatedPackages, setRelatedPackages] = useState<any[]>([]);
 
   const defaultPackages = [
     {
@@ -63,13 +61,9 @@ const PackageDetailPage: React.FC = () => {
           allPkgs = defaultPackages;
         }
         
-        const foundPkg = allPkgs.find(p => p.id === id);
+        const foundPkg = allPkgs.find((p: any) => p.id === id);
         if (foundPkg) {
           setPkg(foundPkg);
-          const related = allPkgs
-            .filter(p => p.id !== id && (p.journeyType === foundPkg.journeyType))
-            .slice(0, 3);
-          setRelatedPackages(related);
         }
       } catch (err) {
         console.error("Error fetching package:", err);
