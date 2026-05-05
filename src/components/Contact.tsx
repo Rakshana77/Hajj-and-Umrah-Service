@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, MapPin, Mail, Send, CheckCircle2, MessageCircle } from 'lucide-react';
 
 const Contact: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    package: 'Economy Umrah Package',
+    message: ''
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Construct WhatsApp message
+    const whatsappNumber = "918123379158"; 
+    const text = `*New Inquiry from Website*%0A%0A*Name:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Package:* ${formData.package}%0A*Message:* ${formData.message}`;
+    
+    window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
+  };
+
   return (
     <main className="bg-[#FCFBF7] min-h-screen pt-32 sm:pt-40 pb-20">
       <div className="max-w-7xl mx-auto px-8">
@@ -32,10 +49,10 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-xs text-neutral-400 font-black uppercase tracking-widest mb-2">Call Us</p>
-                    <div className="space-y-1">
-                      <p className="text-lg font-bold text-[#1A1305]">08123379158</p>
-                      <p className="text-lg font-bold text-[#1A1305]">88071 14887</p>
-                      <p className="text-lg font-bold text-[#1A1305]">75581 98870</p>
+                    <div className="flex flex-col gap-1">
+                      <a href="tel:08123379158" className="text-lg font-bold text-[#1A1305] hover:text-[#C9A54C] transition-colors">08123379158</a>
+                      <a href="tel:8807114887" className="text-lg font-bold text-[#1A1305] hover:text-[#C9A54C] transition-colors">88071 14887</a>
+                      <a href="tel:7558198870" className="text-lg font-bold text-[#1A1305] hover:text-[#C9A54C] transition-colors">75581 98870</a>
                     </div>
                   </div>
                 </div>
@@ -60,7 +77,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-xs text-neutral-400 font-black uppercase tracking-widest mb-2">WhatsApp Support</p>
-                    <p className="text-lg font-bold text-[#1A1305]">0541554916 (Saudi)</p>
+                    <a href="tel:0541554916" className="text-lg font-bold text-[#1A1305] hover:text-[#C9A54C] transition-colors">0541554916 (Saudi)</a>
                   </div>
                 </div>
               </div>
@@ -96,21 +113,39 @@ const Contact: React.FC = () => {
               className="bg-white p-10 rounded-[2rem] border border-neutral-100 shadow-xl"
             >
               <h2 className="text-2xl font-bold text-[#1A1305] mb-10">Send an Inquiry</h2>
-              <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-8" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black text-neutral-400 uppercase tracking-widest px-1">Full Name</label>
-                    <input className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none" placeholder="Your Name" type="text"/>
+                    <input 
+                      required
+                      className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none" 
+                      placeholder="Your Name" 
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-black text-neutral-400 uppercase tracking-widest px-1">Phone Number</label>
-                    <input className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none" placeholder="+91 00000 00000" type="tel"/>
+                    <input 
+                      required
+                      className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none" 
+                      placeholder="+91 00000 00000" 
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-neutral-400 uppercase tracking-widest px-1">Preferred Package</label>
-                  <select className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none appearance-none">
+                  <select 
+                    className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none appearance-none cursor-pointer"
+                    value={formData.package}
+                    onChange={(e) => setFormData({...formData, package: e.target.value})}
+                  >
                     <option>Economy Umrah Package</option>
                     <option>Deluxe Umrah Package</option>
                     <option>3 Umrah + Ziyara Premium Package</option>
@@ -119,12 +154,19 @@ const Contact: React.FC = () => {
 
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-neutral-400 uppercase tracking-widest px-1">Message</label>
-                  <textarea className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none resize-none" placeholder="How can we help you?" rows={5}></textarea>
+                  <textarea 
+                    required
+                    className="w-full bg-[#FCFBF7] border-transparent focus:border-[#C9A54C] rounded-xl py-4 px-6 transition-all text-[#1A1305] font-bold outline-none resize-none" 
+                    placeholder="How can we help you?" 
+                    rows={5}
+                    value={formData.message}
+                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  ></textarea>
                 </div>
 
                 <button className="w-full bg-[#1A1305] text-[#C9A54C] py-5 rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-[#C9A54C] hover:text-white transition-all flex items-center justify-center gap-4 shadow-xl" type="submit">
-                  Send Your Inquiry
-                  <Send className="w-4 h-4" />
+                  Send Your Inquiry via WhatsApp
+                  <MessageCircle className="w-4 h-4" />
                 </button>
               </form>
             </motion.div>

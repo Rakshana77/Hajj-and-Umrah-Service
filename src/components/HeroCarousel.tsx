@@ -32,7 +32,7 @@ const defaultSlides = [
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAVwKI_ZBdsm7hQMNZYidAMibMAREIAijffO5tdyep9EDFzl1vmawgDrQMHqGHX5JIRaCKMkSVf_xMsXIo-FMJ5fJYu4CAJ4QRYJnBg2dwWxmQsV4ktCmZUbHVagFoxxfKFZuQ5td563fTSQ_HpT9OXS-6DbzoUIqaj0t5d6wO3RdAn9gcO5Wnj-Z2aqLEMHQ8rp0k9HQlkctY6HU5GqW7fB6gLdwjw5eSKtGNpqDhhB_m3Opr2vVMEvKudTqmNc7hhC_V8XbW36yU",
     title: "ZIYARAT TOURS",
     subtitle: "Safe for Work - Spiritual Exploration of Historical Sacred Sites with Expert Guides.",
-    ctaText: "View Itinerary"
+    ctaText: "View Package"
   }
 ];
 
@@ -137,13 +137,13 @@ const HeroCarousel: React.FC = () => {
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 px-4">
-                          <Link 
-                            to="/contact"
+                          <a 
+                            href="tel:918123379158"
                             className="w-full sm:w-auto bg-[#C9A54C] text-[#1A1305] px-8 sm:px-10 py-4 rounded-xl font-black text-xs sm:text-sm uppercase tracking-widest hover:bg-white hover:scale-105 transition-all shadow-2xl shadow-[#C9A54C]/20 flex items-center justify-center gap-3"
                           >
                             <Phone className="w-4 h-4" />
                             {slide.ctaText}
-                          </Link>
+                          </a>
                           <a 
                             href="https://wa.me/918123379158"
                             target="_blank"

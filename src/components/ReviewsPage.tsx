@@ -1,7 +1,20 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, MessageCircle, Camera, CheckCircle2, Calendar, Quote } from 'lucide-react';
+import { 
+  Star, 
+  Play, 
+  Maximize2, 
+  X, 
+  MessageCircle, 
+  Camera, 
+  Video, 
+  CheckCircle2, 
+  ArrowRight,
+  Loader2
+} from 'lucide-react';
+import { getReviews } from '../services/dataService';
 
+// Import existing assets
 import man1 from '../assets/reviews/man1.png';
 import woman1 from '../assets/reviews/woman1.png';
 import group1 from '../assets/reviews/group1.png';
@@ -9,308 +22,359 @@ import man2 from '../assets/reviews/man2.png';
 import group2 from '../assets/reviews/group2.png';
 
 interface Review {
-  id: number;
+  id: string | number;
   name: string;
+  location: string;
   rating: number;
-  package: string;
-  type: 'Umrah' | 'Hajj';
+  type: 'video' | 'photo';
+  isExternal?: boolean;
+  content: string;
+  mediaUrl: string;
+  thumbnail?: string;
   date: string;
-  comment: string;
-  avatar?: string;
 }
 
-const reviews: Review[] = [
+// Helper function to transform URLs
+const getEmbedUrl = (url: string) => {
+  if (!url) return '';
+  
+  // YouTube transformation
+  if (url.includes('youtube.com/watch?v=')) {
+    const videoId = url.split('v=')[1]?.split('&')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  if (url.includes('youtu.be/')) {
+    const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  
+  return url;
+};
+
+const staticReviews: Review[] = [
   {
     id: 1,
-    name: "Ahmed Khan",
+    name: "Abdul Rahman",
+    location: "Chennai",
     rating: 5,
-    package: "Ramadan Special",
-    type: "Umrah",
-    date: "April 2024",
-    comment: "An absolutely spiritual journey that was managed with extreme care. The hotel was very close to the Haram, and the food reminded us of home. JazakAllah to the team for making this a memory of a lifetime.",
-    avatar: man1
+    type: 'video',
+    content: "Very well organized Umrah trip, Alhamdulillah. The guidance was exceptional.",
+    mediaUrl: "https://assets.mixkit.co/videos/preview/mixkit-muslim-man-praying-in-a-mosque-42240-large.mp4",
+    thumbnail: "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&q=80&w=800",
+    date: "March 2024"
   },
   {
     id: 2,
-    name: "Zoya Fatima",
+    name: "Fatima Begum",
+    location: "Madurai",
     rating: 5,
-    package: "Deluxe Hajj 2023",
-    type: "Hajj",
-    date: "June 2023",
-    comment: "Highly organized Hajj management. The group leaders were always available, especially during the stay in Mina and Arafat. The air-conditioned tents and quality catering made a huge difference.",
-    avatar: woman1
+    type: 'photo',
+    content: "Best guidance throughout the journey. Everything was so peaceful.",
+    mediaUrl: group1,
+    date: "Feb 2024"
   },
   {
     id: 3,
     name: "Mohammad Yusuf",
+    location: "Trichy",
     rating: 5,
-    package: "Economy Umrah",
-    type: "Umrah",
-    date: "February 2024",
-    comment: "Very transparent pricing and excellent value. Even in the economy package, the transport was very comfortable. The scholar leading our group was very knowledgeable.",
-    avatar: man2
+    type: 'video',
+    content: "The spiritual experience was beyond words. Highly recommended service.",
+    mediaUrl: "https://assets.mixkit.co/videos/preview/mixkit-climax-of-a-person-praying-in-a-mosque-42242-large.mp4",
+    thumbnail: "https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&q=80&w=800",
+    date: "Jan 2024"
   },
   {
     id: 4,
-    name: "Sara Siddiqui",
+    name: "Zoya Fatima",
+    location: "Bangalore",
     rating: 5,
-    package: "Premium Family Umrah",
-    type: "Umrah",
-    date: "December 2023",
-    comment: "Traveling with kids and elders can be tough, but the customized support we received was amazing. The wheelchair assistance and buffet catering were top-notch.",
-    avatar: woman1
+    type: 'photo',
+    content: "A truly blessed experience. The hotel was very close to Haram.",
+    mediaUrl: woman1,
+    date: "April 2024"
   },
   {
     id: 5,
     name: "Ibrahim Ali",
+    location: "Hyderabad",
     rating: 5,
-    package: "Standard Hajj",
-    type: "Hajj",
-    date: "July 2023",
-    comment: "Professional from start to finish. The pre-departure orientation was very helpful. Everything promised in the brochure was delivered. Highly recommend for first-timers.",
-    avatar: man1
+    type: 'video',
+    content: "JazakAllah for the amazing arrangements. Everything was perfect.",
+    mediaUrl: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-praying-in-a-mosque-42241-large.mp4",
+    thumbnail: "https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&q=80&w=800",
+    date: "Dec 2023"
+  },
+  {
+    id: 6,
+    name: "Sara Siddiqui",
+    location: "Coimbatore",
+    rating: 5,
+    type: 'photo',
+    content: "The group leaders were very supportive. Best Umrah agency.",
+    mediaUrl: group2,
+    date: "Nov 2023"
+  },
+  {
+    id: 7,
+    name: "Ahmed Khan",
+    location: "Mumbai",
+    rating: 5,
+    type: 'photo',
+    content: "Smooth visa processing and excellent accommodation.",
+    mediaUrl: man1,
+    date: "May 2024"
+  },
+  {
+    id: 8,
+    name: "Omar Farooq",
+    location: "Kerala",
+    rating: 5,
+    type: 'photo',
+    content: "The food was great and the transport was very comfortable.",
+    mediaUrl: man2,
+    date: "Oct 2023"
+  },
+  {
+    id: 9,
+    name: "Haji Experience",
+    location: "Holy Makkah",
+    rating: 5,
+    type: 'video',
+    isExternal: true,
+    content: "A soul-stirring glimpse of the blessed journey. SubhanAllah!",
+    mediaUrl: "https://www.instagram.com/reel/DXLoydPD4BM/embed/",
+    thumbnail: "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&q=80&w=1200",
+    date: "June 2024"
+  },
+  {
+    id: 10,
+    name: "Blessed Journey",
+    location: "Madinah Munawwarah",
+    rating: 5,
+    type: 'video',
+    isExternal: true,
+    content: "The most beautiful moments captured during our spiritual journey. A truly life-changing experience.",
+    mediaUrl: "https://www.youtube.com/embed/iS6U-Qezm1o",
+    thumbnail: "https://img.youtube.com/vi/iS6U-Qezm1o/maxresdefault.jpg",
+    date: "July 2024"
   }
 ];
 
-const galleryImages = [
-  group1,
-  group2,
-  man1,
-  man2,
-  woman1,
-  group1
-];
-
 const ReviewsPage: React.FC = () => {
-  const [activeFilter, setActiveFilter] = useState<'All' | 'Umrah' | 'Hajj'>('All');
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [filter, setFilter] = useState<'all' | 'video' | 'photo'>('all');
+  const [selectedMedia, setSelectedMedia] = useState<Review | null>(null);
+  const [hoveredVideo, setHoveredVideo] = useState<string | number | null>(null);
+  const [dynamicReviews, setDynamicReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const data = await getReviews();
+        if (data && data.length > 0) {
+          setDynamicReviews(data as any);
+        } else {
+          setDynamicReviews(staticReviews);
+        }
+      } catch (err) {
+        console.error("Error fetching reviews:", err);
+        setDynamicReviews(staticReviews);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReviews();
+  }, []);
 
   const filteredReviews = useMemo(() => {
-    return activeFilter === 'All' ? reviews : reviews.filter(r => r.type === activeFilter);
-  }, [activeFilter]);
-
-  const stats = {
-    average: 4.9,
-    total: 1240,
-    breakdown: [
-      { stars: 5, percentage: 85 },
-      { stars: 4, percentage: 10 },
-      { stars: 3, percentage: 3 },
-      { stars: 2, percentage: 1 },
-      { stars: 1, percentage: 1 },
-    ]
-  };
+    return filter === 'all' ? dynamicReviews : dynamicReviews.filter(r => r.type === filter);
+  }, [filter, dynamicReviews]);
 
   return (
-    <main className="bg-neutral-50 min-h-screen pt-32 sm:pt-40 pb-20 overflow-x-hidden">
-      {/* Hero Section */}
-      <section className="relative h-[40vh] sm:h-[50vh] flex items-center justify-center overflow-hidden mb-16 sm:mb-24">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCf6Qc_zCiI6TJ375gCkSZh4sGYrPPiDe6VYf94i5Edqpr9NC7oJdX1-xaa196kWznKrUp-9sYGF5w7Uhdzw_jLE_GERpzaIIp1j6n3lhEC0MCd98_9HyqZDvzFjSrZy_9meFLbiRID7JJurkYW-crAZeN52Vmljy61r1M558CBpkiXOqVATrcIQ90BvswNS8BTTARS54tOjnMSRF7wNDmDLMtsln7IvsGGv3AZhjbUeU71xUzVXDjCG-yWwwfl023TvIQdww5OIY" 
-            className="w-full h-full object-cover opacity-40"
-            alt="Hero"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/80 via-neutral-900/40 to-neutral-50" />
-        </div>
+    <main className="bg-[#FCFBF7] min-h-screen pt-20 overflow-x-hidden">
+      {/* Header Section */}
+      <section className="relative py-24 flex flex-col items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-10 islamic-pattern" />
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#064E3B]/10 via-transparent to-transparent" />
         
-        <div className="relative z-10 text-center px-4">
-          <motion.span 
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-[#F4C430] font-black text-[10px] sm:text-xs uppercase tracking-[0.4em] mb-4 block"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F4C430]/10 border border-[#F4C430]/20 text-[#F4C430] text-xs font-bold uppercase tracking-widest mb-6"
           >
-            Trusted by Thousands
-          </motion.span>
+            <Star className="w-3.5 h-3.5 fill-current" />
+            <span>Trusted by 10,000+ Pilgrims</span>
+          </motion.div>
+          
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-6xl font-display font-bold text-white mb-6"
+            className="text-4xl sm:text-7xl font-display font-bold text-[#111827] mb-6 leading-tight"
           >
-            Pilgrim <span className="text-[#F4C430]">Experiences</span>
+            Hajis <span className="text-[#F4C430]">Reviews</span> & <br className="hidden sm:block" />
+            <span className="relative">
+              Experiences
+              <svg className="absolute -bottom-2 left-0 w-full h-3 text-[#F4C430]/30" viewBox="0 0 100 10" preserveAspectRatio="none">
+                <path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" />
+              </svg>
+            </span>
           </motion.h1>
+          
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-neutral-300 text-sm sm:text-xl max-w-2xl mx-auto italic"
+            className="text-neutral-600 text-lg sm:text-2xl max-w-2xl mx-auto"
           >
-            "Real stories of spiritual transition and divine connection from our blessed pilgrims."
+            Real experiences from our blessed pilgrims. Stories of faith, transition, and divine connection.
           </motion.p>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-8">
-        {/* Stats & Summary */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 mb-20 sm:mb-32">
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="lg:col-span-4 bg-white p-8 sm:p-10 rounded-[2.5rem] shadow-xl border border-neutral-100 flex flex-col items-center justify-center text-center sticky top-32 h-fit"
-          >
-            <div className="text-6xl sm:text-7xl font-black text-neutral-900 mb-4">{stats.average}</div>
-            <div className="flex gap-1 mb-4">
-              {[1, 2, 3, 4, 5].map(i => (
-                <Star key={i} className={`w-6 h-6 ${i <= 5 ? 'fill-[#F4C430] text-[#F4C430]' : 'text-neutral-200'}`} />
-              ))}
-            </div>
-            <div className="text-neutral-500 font-bold text-sm uppercase tracking-widest mb-8">
-              Based on {stats.total}+ Reviews
-            </div>
-            
-            <div className="w-full space-y-4">
-              {stats.breakdown.map((row) => (
-                <div key={row.stars} className="flex items-center gap-4 text-xs">
-                  <div className="w-4 font-bold text-neutral-400">{row.stars}★</div>
-                  <div className="flex-grow h-2 bg-neutral-100 rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${row.percentage}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1, delay: 0.5 }}
-                      className="h-full bg-[#F4C430]"
-                    />
-                  </div>
-                  <div className="w-8 text-right font-bold text-neutral-600">{row.percentage}%</div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 pb-24">
+        {/* Filter Tabs */}
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-16">
+          {[
+            { id: 'all', label: 'All Reviews', icon: MessageCircle },
+            { id: 'video', label: 'Video Stories', icon: Video },
+            { id: 'photo', label: 'Photo Moments', icon: Camera }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setFilter(tab.id as any)}
+              className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
+                filter === tab.id 
+                  ? 'bg-[#064E3B] text-white shadow-lg' 
+                  : 'bg-white text-neutral-500 hover:bg-neutral-100'
+              }`}
+            >
+              <tab.icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-          <div className="lg:col-span-8 space-y-8 sm:space-y-12">
-            {/* Filter Tabs */}
-            <div className="flex flex-wrap gap-4 sm:gap-6 border-b border-neutral-100 pb-6 sm:pb-8">
-              {['All', 'Umrah', 'Hajj'].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveFilter(tab as any)}
-                  className={`text-sm sm:text-base font-black uppercase tracking-widest transition-all relative pb-2 ${activeFilter === tab ? 'text-[#F4C430]' : 'text-neutral-400 hover:text-neutral-900'}`}
-                >
-                  {tab} Reviews
-                  {activeFilter === tab && (
-                    <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-1 bg-[#F4C430] rounded-full" />
-                  )}
-                </button>
-              ))}
+        {/* Video Section */}
+        {(filter === 'all' || filter === 'video') && (
+          <section className="mb-20">
+            <div className="flex items-center gap-4 mb-10">
+              <div className="h-px flex-grow bg-neutral-200" />
+              <h2 className="text-2xl font-display font-bold text-neutral-900 flex items-center gap-2">
+                <Video className="text-[#F4C430]" /> Video Testimonials
+              </h2>
+              <div className="h-px flex-grow bg-neutral-200" />
             </div>
 
-            {/* Reviews List */}
-            <div className="grid grid-cols-1 gap-6 sm:gap-8">
-              <AnimatePresence mode="popLayout">
-                {filteredReviews.map((review, i) => (
+            {loading ? (
+              <div className="flex justify-center py-20">
+                <Loader2 className="text-[#F4C430] animate-spin" size={40} />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredReviews.filter(r => r.type === 'video').map((review) => (
                   <motion.div
                     key={review.id}
-                    layout
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                    className="bg-white p-6 sm:p-10 rounded-[2rem] shadow-sm hover:shadow-2xl transition-all border border-neutral-100 relative group"
+                    className="group relative bg-white rounded-[2rem] overflow-hidden shadow-xl border border-neutral-100"
+                    onMouseEnter={() => setHoveredVideo(review.id)}
+                    onMouseLeave={() => setHoveredVideo(null)}
+                    onClick={() => setSelectedMedia(review)}
                   >
-                    <div className="absolute top-8 right-8 text-neutral-100 group-hover:text-[#F4C430]/10 transition-colors">
-                      <Quote className="w-16 h-16 sm:w-20 sm:h-20" />
-                    </div>
-                    
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl overflow-hidden bg-neutral-100 ring-4 ring-[#F4C430]/10 shrink-0">
-                        <img src={review.avatar} alt={review.name} className="w-full h-full object-cover" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-bold text-lg sm:text-xl text-neutral-900">{review.name}</h4>
-                          <CheckCircle2 className="w-4 h-4 text-[#F4C430]" />
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <div className="flex gap-0.5">
-                            {[1, 2, 3, 4, 5].map(star => (
-                              <Star key={star} className={`w-3 h-3 sm:w-4 sm:h-4 ${star <= review.rating ? 'fill-[#F4C430] text-[#F4C430]' : 'text-neutral-200'}`} />
-                            ))}
-                          </div>
-                          <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#F4C430] bg-[#F4C430]/10 px-3 py-1 rounded-full">
-                            {review.package}
-                          </span>
+                    <div className="aspect-video relative overflow-hidden bg-neutral-900">
+                      <img 
+                        src={review.thumbnail || review.mediaUrl} 
+                        alt={review.name} 
+                        className={`w-full h-full object-cover transition-opacity duration-300 ${hoveredVideo === review.id ? 'opacity-0' : 'opacity-100'}`}
+                      />
+                      {hoveredVideo === review.id && !review.isExternal && (
+                        <video src={review.mediaUrl} className="absolute inset-0 w-full h-full object-cover" autoPlay muted loop />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="w-16 h-16 rounded-full bg-[#F4C430] flex items-center justify-center text-white shadow-2xl">
+                          <Play className="w-8 h-8 fill-current ml-1" />
                         </div>
                       </div>
+                      <div className="absolute bottom-6 left-6 right-6 text-white">
+                        <h4 className="font-bold text-xl">{review.name}</h4>
+                        <p className="text-xs uppercase tracking-wider">{review.location}</p>
+                      </div>
                     </div>
-
-                    <p className="text-neutral-600 text-sm sm:text-lg leading-relaxed mb-6 sm:mb-8 relative z-10 font-medium">
-                      "{review.comment}"
-                    </p>
-
-                    <div className="flex items-center gap-6 pt-6 sm:pt-8 border-t border-neutral-50 text-[10px] sm:text-xs text-neutral-400 font-bold uppercase tracking-widest">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F4C430]" />
-                        {review.date}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F4C430]" />
-                        Verified Pilgrimage
-                      </div>
+                    <div className="p-6">
+                      <p className="text-neutral-600 text-sm italic italic leading-relaxed">"{review.content}"</p>
                     </div>
                   </motion.div>
                 ))}
-              </AnimatePresence>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* Photo Section */}
+        {(filter === 'all' || filter === 'photo') && (
+          <section className="mb-20">
+            <div className="flex items-center gap-4 mb-10">
+              <div className="h-px flex-grow bg-neutral-200" />
+              <h2 className="text-2xl font-display font-bold text-neutral-900 flex items-center gap-2">
+                <Camera className="text-[#F4C430]" /> Captured Moments
+              </h2>
+              <div className="h-px flex-grow bg-neutral-200" />
             </div>
-          </div>
+
+            <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+              {filteredReviews.filter(r => r.type === 'photo').map((review) => (
+                <motion.div
+                  key={review.id}
+                  className="relative group cursor-zoom-in rounded-3xl overflow-hidden shadow-lg"
+                  onClick={() => setSelectedMedia(review)}
+                >
+                  <img src={review.mediaUrl} alt={review.name} className="w-full h-auto object-cover" />
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                    <h4 className="text-white font-bold">{review.name}</h4>
+                    <p className="text-white/60 text-xs">{review.location}</p>
+                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mt-4">
+                      <Maximize2 className="text-white w-5 h-5" />
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <div className="text-center mt-12">
+          <button className="inline-flex items-center gap-2 px-10 py-4 bg-white border-2 border-neutral-200 rounded-full text-neutral-900 font-black uppercase tracking-widest hover:bg-neutral-900 hover:text-white transition-all">
+            Load More Experiences
+            <ArrowRight className="w-5 h-5" />
+          </button>
         </div>
-
-        {/* Experience Gallery */}
-        <section className="mb-20 sm:mb-32">
-          <div className="text-center mb-12 sm:mb-20">
-            <div className="flex items-center justify-center gap-3 text-[#F4C430] mb-4">
-              <Camera className="w-6 h-6" />
-              <span className="font-black text-[10px] sm:text-xs uppercase tracking-[0.4em]">Visual Journeys</span>
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-display font-bold text-neutral-900 mb-6">Real <span className="text-[#F4C430]">Pilgrim Gallery</span></h2>
-            <p className="text-neutral-500 text-sm sm:text-lg max-w-2xl mx-auto italic">
-              "Captured moments of spiritual bliss and brotherhood from our previous groups."
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {galleryImages.map((src, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -10 }}
-                onClick={() => setSelectedImage(src)}
-                className="aspect-square rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden cursor-zoom-in shadow-lg hover:shadow-2xl transition-all duration-500 group"
-              >
-                <img 
-                  src={src} 
-                  alt="Gallery" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-neutral-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Camera className="text-white w-8 h-8" />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
       </div>
 
-      {/* Image Modal */}
       <AnimatePresence>
-        {selectedImage && (
+        {selectedMedia && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 z-[200] bg-neutral-900/95 backdrop-blur-xl p-4 sm:p-10 flex items-center justify-center cursor-zoom-out"
+            className="fixed inset-0 z-[1000] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4"
           >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="relative max-w-5xl w-full aspect-video sm:aspect-square md:aspect-video rounded-3xl overflow-hidden shadow-3xl"
-            >
-              <img src={selectedImage} alt="Fullscreen" className="w-full h-full object-contain" />
+            <button onClick={() => setSelectedMedia(null)} className="absolute top-6 right-6 text-white"><X size={32} /></button>
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="relative max-w-6xl w-full h-full flex flex-col items-center justify-center">
+              <div className="w-full h-full max-h-[80vh] rounded-[2rem] overflow-hidden bg-neutral-900 shadow-2xl relative">
+                {selectedMedia.type === 'video' ? (
+                  selectedMedia.isExternal ? (
+                    <iframe src={getEmbedUrl(selectedMedia.mediaUrl)} className="w-full h-full border-0" allowFullScreen />
+                  ) : (
+                    <video src={selectedMedia.mediaUrl} className="w-full h-full object-contain" controls autoPlay />
+                  )
+                ) : (
+                  <img src={selectedMedia.mediaUrl} alt={selectedMedia.name} className="w-full h-full object-contain" />
+                )}
+              </div>
+              <div className="mt-8 text-center text-white">
+                <h3 className="text-2xl font-bold">{selectedMedia.name} — {selectedMedia.location}</h3>
+                <p className="text-white/80 italic mt-2">"{selectedMedia.content}"</p>
+              </div>
             </motion.div>
           </motion.div>
         )}

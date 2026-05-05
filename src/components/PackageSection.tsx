@@ -146,7 +146,9 @@ const PackageSection: React.FC = () => {
                     
                     <div className="flex items-center gap-4 mb-6">
                         <div className="flex flex-col">
-                            <span className="text-3xl font-black text-[#1A1305] tracking-tighter">{pkg.price}</span>
+                            <span className="text-3xl font-black text-[#1A1305] tracking-tighter">
+                                {pkg.price?.toString().startsWith('₹') ? pkg.price : `₹${pkg.price}`}
+                            </span>
                             <span className="text-neutral-400 text-[10px] font-black uppercase tracking-widest">Starting from</span>
                         </div>
                         <div className="h-10 w-[1px] bg-neutral-100" />
@@ -165,7 +167,7 @@ const PackageSection: React.FC = () => {
                       className="w-full bg-[#1A1305] text-white py-5 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all hover:bg-[#C9A54C] hover:scale-[1.02] flex items-center justify-center gap-3 shadow-xl"
                     >
                       <ExternalLink className="w-4 h-4" />
-                      View Itinerary
+                      View Package
                     </Link>
                     <a
                       href={`https://wa.me/918123379158?text=Interested in ${pkg.title}`}

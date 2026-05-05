@@ -338,7 +338,11 @@ const PackagesPage: React.FC = () => {
                           <div className="mt-auto pt-8 border-t border-neutral-50">
                             <div className="flex items-baseline gap-2 mb-6">
                               <span className="text-3xl font-black text-[#1A1305]">
-                                {typeof pkg.price === 'number' ? `₹${pkg.price.toLocaleString()}` : pkg.price}
+                                {typeof pkg.price === 'number' 
+                                  ? `₹${pkg.price.toLocaleString()}` 
+                                  : pkg.price?.toString().startsWith('₹') 
+                                    ? pkg.price 
+                                    : `₹${pkg.price}`}
                               </span>
                               <span className="text-[9px] font-black text-neutral-400 uppercase tracking-widest">Starting Price</span>
                             </div>

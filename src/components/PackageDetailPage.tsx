@@ -248,7 +248,11 @@ const PackageDetailPage: React.FC = () => {
                   <p className="text-neutral-400 font-black text-[10px] uppercase tracking-[0.4em] mb-4">Investment for Journey</p>
                   <div className="flex flex-col items-center">
                     <span className="text-6xl font-black text-[#1A1305] mb-2 tracking-tight">
-                        {typeof pkg.price === 'number' ? `₹${pkg.price.toLocaleString()}` : pkg.price}
+                        {typeof pkg.price === 'number' 
+                          ? `₹${pkg.price.toLocaleString()}` 
+                          : pkg.price?.toString().startsWith('₹') 
+                            ? pkg.price 
+                            : `₹${pkg.price}`}
                     </span>
                     <span className="text-xs text-neutral-400 font-bold uppercase tracking-[0.2em]">Full Journey Price</span>
                   </div>
@@ -264,13 +268,13 @@ const PackageDetailPage: React.FC = () => {
                     <MessageCircle className="w-7 h-7" />
                     WhatsApp Booking
                   </a>
-                  <Link 
-                    to="/contact"
+                  <a 
+                    href="tel:918123379158"
                     className="w-full bg-[#FCFBF7] text-[#1A1305] border-2 border-neutral-100 py-7 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] hover:border-[#C9A54C] transition-all flex items-center justify-center gap-5 active:scale-95 shadow-lg"
                   >
                     <Phone className="w-6 h-6" />
                     Enquire via Call
-                  </Link>
+                  </a>
                 </div>
 
                 <div className="mt-12 pt-12 border-t border-neutral-100 text-center">
