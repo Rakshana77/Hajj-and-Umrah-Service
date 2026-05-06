@@ -10,8 +10,7 @@ import {
   setDoc,
   getDoc
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "../firebase/config";
+import { db } from "../firebase/config";
 
 // HERO SERVICES
 export const getHeroData = async () => {

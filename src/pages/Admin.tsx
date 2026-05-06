@@ -19,18 +19,14 @@ import {
   Save, 
   X, 
   Image as ImageIcon, 
-  Layout, 
   Package as PackageIcon, 
-  LogOut,
   Upload,
   Loader2,
   CheckCircle2,
   Activity,
-  ArrowRight,
   Star,
   Plane,
   MapPin,
-  ExternalLink,
   Search,
   Filter,
   Video
@@ -44,7 +40,7 @@ const Admin: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'dashboard' | 'hero' | 'packages' | 'reviews'>('dashboard');
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [, setMessage] = useState({ type: '', text: '' });
 
   // Stats State
   const [stats, setStats] = useState({
@@ -658,7 +654,7 @@ const Admin: React.FC = () => {
                         </div>
                         <div className="space-y-3 sm:space-y-4">
                             <label className="text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-[#000]">Duration (Days)</label>
-                            <input required type="number" placeholder="15" value={packageForm.duration || ''} onChange={e => setPackageForm({...packageForm, duration: parseInt(e.target.value) || 0})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-black text-lg sm:text-xl text-[#000] outline-none focus:border-[#C9A54C]" />
+                            <input required type="number" placeholder="15" value={packageForm.duration?.toString() || ''} onChange={e => setPackageForm({...packageForm, duration: parseInt(e.target.value) as any || 0})} className="w-full bg-neutral-50 border-2 border-neutral-100 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-6 font-black text-lg sm:text-xl text-[#000] outline-none focus:border-[#C9A54C]" />
                         </div>
                     </div>
 

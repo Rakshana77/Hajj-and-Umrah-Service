@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Sparkles, Loader2, MessageCircle, Phone } from 'lucide-react';
-import { Link } from 'react-router-dom';
+
 import { getHeroData } from '../services/dataService';
 
 // Import Swiper styles

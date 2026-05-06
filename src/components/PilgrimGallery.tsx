@@ -6,7 +6,6 @@ import { Camera, ArrowRight, Star, Play, Video } from 'lucide-react';
 // Import local assets for stability
 import group1 from '../assets/reviews/group1.png';
 import group2 from '../assets/reviews/group2.png';
-import man1 from '../assets/reviews/man1.png';
 import woman1 from '../assets/reviews/woman1.png';
 import man2 from '../assets/reviews/man2.png';
 

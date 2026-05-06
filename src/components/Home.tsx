@@ -2,7 +2,7 @@ import React from 'react';
 import HeroCarousel from './HeroCarousel';
 import PackageSection from './PackageSection';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Clock, Users, MessageCircle, Phone, ArrowRight, Star } from 'lucide-react';
+import { ShieldCheck, Clock, Users, MessageCircle, Phone, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import PilgrimGallery from './PilgrimGallery';
