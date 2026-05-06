@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { motion } from 'framer-motion';
 import { 
+  ChevronLeft, 
+  ChevronRight, 
+  CheckCircle2, 
   Star, 
+  Filter, 
+  ArrowUpDown, 
   Loader2, 
   MessageCircle, 
   Plane, 
@@ -10,10 +17,17 @@ import {
 } from 'lucide-react';
 import { getPackages } from '../services/dataService';
 
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
 const PackageSection: React.FC = () => {
   const [allPackages, setAllPackages] = useState<any[]>([]);
   const [filteredPackages, setFilteredPackages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('All');
+  const [sortBy, setSortBy] = useState('newest');
 
   useEffect(() => {
     const fetchPkgs = async () => {
