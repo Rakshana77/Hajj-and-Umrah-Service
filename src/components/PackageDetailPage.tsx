@@ -255,7 +255,7 @@ const PackageDetailPage: React.FC = () => {
 
                 <div className="space-y-5">
                   <a 
-                    href={`https://wa.me/918123379158?text=I'm interested in the ${pkg.title} package`}
+                    href={`https://wa.me/918807114887?text=I'm interested in the ${pkg.title} package`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full bg-[#1A1305] text-[#C9A54C] py-7 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] hover:bg-[#C9A54C] hover:text-white transition-all flex items-center justify-center gap-5 shadow-2xl shadow-[#1A1305]/20 active:scale-95"
@@ -264,7 +264,7 @@ const PackageDetailPage: React.FC = () => {
                     WhatsApp Booking
                   </a>
                   <a 
-                    href="tel:918123379158"
+                    href="tel:7558198870"
                     className="w-full bg-[#FCFBF7] text-[#1A1305] border-2 border-neutral-100 py-7 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] hover:border-[#C9A54C] transition-all flex items-center justify-center gap-5 active:scale-95 shadow-lg"
                   >
                     <Phone className="w-6 h-6" />

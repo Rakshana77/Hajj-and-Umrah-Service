@@ -138,14 +138,14 @@ const HeroCarousel: React.FC = () => {
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 px-4">
                           <a 
-                            href="tel:918123379158"
+                            href="tel:7558198870"
                             className="w-full sm:w-auto bg-[#C9A54C] text-[#1A1305] px-8 sm:px-10 py-4 rounded-xl font-black text-xs sm:text-sm uppercase tracking-widest hover:bg-white hover:scale-105 transition-all shadow-2xl shadow-[#C9A54C]/20 flex items-center justify-center gap-3"
                           >
                             <Phone className="w-4 h-4" />
                             {slide.ctaText}
                           </a>
                           <a 
-                            href="https://wa.me/918123379158"
+                            href="https://wa.me/918807114887"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-full sm:w-auto border-2 border-[#25D366]/50 bg-[#25D366]/10 backdrop-blur-md text-white px-8 sm:px-10 py-4 rounded-xl font-black text-xs sm:text-sm uppercase tracking-widest hover:bg-[#25D366] transition-all flex items-center justify-center gap-3"

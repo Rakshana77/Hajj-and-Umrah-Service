@@ -14,7 +14,7 @@ const Contact: React.FC = () => {
     e.preventDefault();
     
     // Construct WhatsApp message
-    const whatsappNumber = "918123379158"; 
+    const whatsappNumber = "918807114887"; 
     const text = `*New Inquiry from Website*%0A%0A*Name:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Package:* ${formData.package}%0A*Message:* ${formData.message}`;
     
     window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
@@ -50,9 +50,8 @@ const Contact: React.FC = () => {
                   <div>
                     <p className="text-xs text-neutral-400 font-black uppercase tracking-widest mb-2">Call Us</p>
                     <div className="flex flex-col gap-1">
-                      <a href="tel:08123379158" className="text-lg font-bold text-[#1A1305] hover:text-[#C9A54C] transition-colors">08123379158</a>
-                      <a href="tel:8807114887" className="text-lg font-bold text-[#1A1305] hover:text-[#C9A54C] transition-colors">88071 14887</a>
-                      <a href="tel:7558198870" className="text-lg font-bold text-[#1A1305] hover:text-[#C9A54C] transition-colors">75581 98870</a>
+                      <a href="tel:7558198870" className="text-lg font-bold text-[#1A1305] hover:text-[#C9A54C] transition-colors">7558198870</a>
+                      <a href="tel:918807114887" className="text-lg font-bold text-[#1A1305] hover:text-[#C9A54C] transition-colors">+91 88071 14887</a>
                     </div>
                   </div>
                 </div>

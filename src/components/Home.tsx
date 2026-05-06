@@ -109,7 +109,7 @@ const Home: React.FC = () => {
                 Enquire Now
               </button>
               <a 
-                href="https://wa.me/918123379158"
+                href="https://wa.me/918807114887"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto border-2 border-white/20 text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white hover:text-[#1A1305] transition-all flex items-center justify-center gap-3"

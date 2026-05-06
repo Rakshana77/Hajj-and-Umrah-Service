@@ -225,7 +225,7 @@ const Navbar: React.FC = () => {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <a 
-                    href="tel:08123379158"
+                    href="tel:7558198870"
                     className="bg-white/5 text-white py-4 rounded-2xl font-bold text-[10px] uppercase tracking-widest text-center border border-white/10 flex flex-col items-center justify-center gap-2 hover:bg-white/10 transition-all"
                   >
                     <Phone className="w-4 h-4 text-[#C9A54C]" />

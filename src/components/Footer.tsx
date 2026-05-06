@@ -80,8 +80,8 @@ const Footer: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-xs text-neutral-500 uppercase font-black mb-1">Call Support</p>
-                  <p className="text-sm font-bold text-white">08123379158</p>
-                  <p className="text-sm font-bold text-white">88071 14887</p>
+                  <p className="text-sm font-bold text-white">7558198870</p>
+                  <p className="text-sm font-bold text-white">+91 88071 14887</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 group">

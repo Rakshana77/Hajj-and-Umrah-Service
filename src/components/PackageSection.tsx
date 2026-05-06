@@ -163,7 +163,7 @@ const PackageSection: React.FC = () => {
                       View Package
                     </Link>
                     <a
-                      href={`https://wa.me/918123379158?text=Interested in ${pkg.title}`}
+                      href={`https://wa.me/918807114887?text=Interested in ${pkg.title}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full border-2 border-neutral-200 text-[#1A1305] py-5 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all hover:border-[#25D366] hover:bg-[#25D366] hover:text-white flex items-center justify-center gap-3"

@@ -355,7 +355,7 @@ const PackagesPage: React.FC = () => {
                                 View Detailed Journey
                               </Link>
                               <a 
-                                href={`https://wa.me/918123379158?text=Interested in ${pkg.title}`}
+                                href={`https://wa.me/918807114887?text=Interested in ${pkg.title}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="col-span-1 bg-green-500 text-white rounded-2xl flex items-center justify-center hover:bg-green-600 transition-all shadow-xl shadow-green-500/20"
